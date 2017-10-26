@@ -25,7 +25,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310;
 
 import static java.time.Instant.ofEpochMilli;
-import static java.time.LocalDate.now;
+import static java.time.LocalDate.ofEpochDay;
 import static java.time.ZoneOffset.UTC;
 
 import java.time.LocalTime;
@@ -58,7 +58,7 @@ public final class LocalTimeCodec
             EncoderContext encoderContext) {
 
         writer.writeDateTime(
-                value.atDate(now())
+                value.atDate(ofEpochDay(0L))
                      .toInstant(UTC)
                      .toEpochMilli()
         );
