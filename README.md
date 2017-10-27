@@ -44,6 +44,6 @@ sorting:
 * `OffsetTimeCodec`
 * `ZonedDateTimeCodec`
 
-Additionally `java.time.Period` values are not comparable by default.
+Additionally `java.time.Period` values are not comparable by design.
 
 All other codecs support sorting.
