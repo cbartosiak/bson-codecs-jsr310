@@ -4,16 +4,19 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 
+    <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
     <description>
         BSON codecs for Java 8 Date and Time API (JSR-310).
     </description>
     <url>https://github.com/cbartosiak/bson-codecs-jsr310</url>
 
+    <!-- Licenses -->
     <licenses>
         <license>
             <name>MIT</name>
@@ -21,6 +24,7 @@
         </license>
     </licenses>
 
+    <!-- Developers -->
     <developers>
         <developer>
             <name>Cezary Bartosiak</name>
@@ -28,6 +32,7 @@
         </developer>
     </developers>
 
+    <!-- SCM -->
     <scm>
         <connection>
             scm:git:https://github.com/cbartosiak/bson-codecs-jsr310.git
@@ -38,6 +43,7 @@
         <url>https://github.com/cbartosiak/bson-codecs-jsr310</url>
     </scm>
 
+    <!-- Distribution Management -->
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -45,6 +51,7 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <!-- Properties -->
     <properties>
 
         <!-- BSON -->
@@ -80,6 +87,7 @@
 
     </properties>
 
+    <!-- Dependencies -->
     <dependencies>
 
         <!-- BSON -->
@@ -99,6 +107,7 @@
 
     </dependencies>
 
+    <!-- Build -->
     <build>
         <plugins>
 
@@ -142,6 +151,7 @@
         </plugins>
     </build>
 
+    <!-- Profiles -->
     <profiles>
 
         <!-- Build Extras -->

@@ -19,10 +19,17 @@ This library provides codecs for the following JSR-310 classes:
 
 ### Usage
 
-The library will be soon available in _Maven_.
+The library is available in Maven Central Repository:
+```
+<dependency>
+    <groupId>io.github.cbartosiak</groupId>
+    <artifactId>bson-codecs-jsr310</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 To utilize the provided codecs one can use `Jsr310CodecProvider`, for example
-in case of the synchronous client:
+in case of Mongo synchronous client:
 
 ```
 MongoClient client = ...
