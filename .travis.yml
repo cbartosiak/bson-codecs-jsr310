@@ -15,14 +15,12 @@ cache:
     directories:
         - ~/.m2/repository
 
-before_install:
-    - chmod +x travis/before-deploy.sh
-    - chmod +x travis/deploy.sh
-
 install: mvn install -P !build-extras -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 script: mvn test -P !build-extras -B
 
 after_success:
+    - chmod +x travis/before-deploy.sh
+    - chmod +x travis/deploy.sh
     - ./travis/before-deploy.sh
     - ./travis/deploy.sh
