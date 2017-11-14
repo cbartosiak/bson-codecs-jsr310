@@ -52,7 +52,9 @@ import org.bson.io.BasicOutputBuffer;
 import org.bson.io.BsonOutput;
 import org.junit.jupiter.api.Test;
 
-final class CodecsTest {
+final class CodecsTests {
+
+    private CodecsTests() {}
 
     @Test
     void testDurationCodec() {
