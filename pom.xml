@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -59,8 +59,8 @@
         <bson.version>3.5.0</bson.version>
 
         <!-- JUnit -->
-        <junit-jupiter.version>5.0.0</junit-jupiter.version>
-        <junit-platform.version>1.0.0</junit-platform.version>
+        <junit-jupiter.version>5.0.2</junit-jupiter.version>
+        <junit-platform.version>1.0.2</junit-platform.version>
 
         <!-- Maven Compiler Plugin -->
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -134,6 +134,11 @@
                     </dependency>
 
                 </dependencies>
+                <configuration>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                </configuration>
             </plugin>
 
             <!-- Nexus Staging Maven Plugin -->
