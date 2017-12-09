@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -55,8 +55,11 @@
     <!-- Properties -->
     <properties>
 
+        <!-- API Guardian-->
+        <apiguardian-api.version>1.0.0</apiguardian-api.version>
+
         <!-- BSON -->
-        <bson.version>3.5.0</bson.version>
+        <bson.version>3.6.0</bson.version>
 
         <!-- JUnit -->
         <junit-jupiter.version>5.0.2</junit-jupiter.version>
@@ -90,6 +93,14 @@
 
     <!-- Dependencies -->
     <dependencies>
+
+        <!-- API Guardian-->
+        <dependency>
+            <groupId>org.apiguardian</groupId>
+            <artifactId>apiguardian-api</artifactId>
+            <version>${apiguardian-api.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- BSON -->
         <dependency>
