@@ -24,7 +24,6 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
-import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -131,14 +130,7 @@ final class CodecsTests {
                     codec
             );
 
-            assertEquals(
-                    value,
-                    decoded,
-                    format(
-                            "The codec failure: %s",
-                            codec.getClass().getSimpleName()
-                    )
-            );
+            assertEquals(value, decoded);
         }
     }
 
@@ -161,11 +153,7 @@ final class CodecsTests {
             reader.readStartDocument();
 
             String name = reader.readName();
-            assertEquals(
-                    "value",
-                    name,
-                    format("Unknown field read: %s", name)
-            );
+            assertEquals("value", name);
 
             return codec.decode(reader, DecoderContext.builder().build());
         }
