@@ -26,6 +26,7 @@ package io.github.cbartosiak.bson.codecs.jsr310;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -86,5 +87,25 @@ public final class Jsr310CodecProvider
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
     private <T> void putCodec(Codec<T> codec) {
         codecs.put(codec.getEncoderClass(), codec);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) { return true; }
+        if (obj == null || obj.getClass() != getClass()) { return false; }
+        Jsr310CodecProvider rhs = (Jsr310CodecProvider)obj;
+        return Objects.equals(rhs.codecs, codecs);
+    }
+
+    @Override
+    public int hashCode() {
+        return codecs != null ? codecs.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Jsr310CodecProvider{" +
+               "codecs=" + codecs +
+               '}';
     }
 }
