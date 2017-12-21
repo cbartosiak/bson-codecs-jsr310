@@ -27,6 +27,7 @@ package io.github.cbartosiak.bson.codecs.jsr310;
 import static java.nio.ByteBuffer.wrap;
 import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -50,10 +51,10 @@ import org.bson.codecs.EncoderContext;
 import org.bson.io.BasicOutputBuffer;
 import org.bson.io.BsonOutput;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(PER_CLASS)
 final class CodecsTests {
-
-    private CodecsTests() {}
 
     @Test
     void testDurationCodec() {

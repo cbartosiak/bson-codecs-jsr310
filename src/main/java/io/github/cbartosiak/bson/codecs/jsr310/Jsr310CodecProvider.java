@@ -59,7 +59,7 @@ public final class Jsr310CodecProvider
     private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
 
     /**
-     * Creates a JSR-310 codec provider.
+     * Creates a {@code Jsr310CodecProvider}.
      */
     @SuppressWarnings("OverlyCoupledMethod")
     public Jsr310CodecProvider() {
@@ -84,11 +84,6 @@ public final class Jsr310CodecProvider
         return (Codec<T>)codecs.get(clazz);
     }
 
-    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-    private <T> void putCodec(Codec<T> codec) {
-        codecs.put(codec.getEncoderClass(), codec);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) { return true; }
@@ -107,5 +102,10 @@ public final class Jsr310CodecProvider
         return "Jsr310CodecProvider{" +
                "codecs=" + codecs +
                '}';
+    }
+
+    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
+    private <T> void putCodec(Codec<T> codec) {
+        codecs.put(codec.getEncoderClass(), codec);
     }
 }
