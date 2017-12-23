@@ -39,7 +39,7 @@
             scm:git:https://github.com/cbartosiak/bson-codecs-jsr310.git
         </connection>
         <developerConnection>
-            scm:git:https://github.com/cbartosiak/bson-codecs-jsr310.git
+            scm:git:git@github.com:cbartosiak/bson-codecs-jsr310.git
         </developerConnection>
         <url>https://github.com/cbartosiak/bson-codecs-jsr310</url>
     </scm>
