@@ -56,6 +56,8 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(PER_CLASS)
 final class CodecsTests {
 
+    private CodecsTests() {}
+
     @Test
     void testDurationCodec() {
         testCodec(new DurationCodec(), Duration.ofHours(12));
