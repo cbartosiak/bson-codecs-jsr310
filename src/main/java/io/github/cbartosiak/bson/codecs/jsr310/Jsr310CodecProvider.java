@@ -36,19 +36,19 @@ import org.bson.codecs.configuration.CodecRegistry;
  * <p>
  * Provides codecs for JSR-310 classes:
  * <ul>
- * <li>{@link DurationCodec}</li>
- * <li>{@link InstantCodec}</li>
- * <li>{@link LocalDateCodec}</li>
- * <li>{@link LocalDateTimeCodec}</li>
- * <li>{@link LocalTimeCodec}</li>
- * <li>{@link MonthDayCodec}</li>
- * <li>{@link OffsetDateTimeCodec}</li>
- * <li>{@link OffsetTimeCodec}</li>
- * <li>{@link PeriodCodec}</li>
- * <li>{@link YearCodec}</li>
- * <li>{@link YearMonthCodec}</li>
- * <li>{@link ZonedDateTimeCodec}</li>
- * <li>{@link ZoneOffsetCodec}</li>
+ * <li>{@link DurationCodec}
+ * <li>{@link InstantCodec}
+ * <li>{@link LocalDateCodec}
+ * <li>{@link LocalDateTimeCodec}
+ * <li>{@link LocalTimeCodec}
+ * <li>{@link MonthDayCodec}
+ * <li>{@link OffsetDateTimeCodec}
+ * <li>{@link OffsetTimeCodec}
+ * <li>{@link PeriodCodec}
+ * <li>{@link YearCodec}
+ * <li>{@link YearMonthCodec}
+ * <li>{@link ZonedDateTimeCodec}
+ * <li>{@link ZoneOffsetCodec}
  * </ul>
  * <p>
  * The implementation is <b>thread-safe</b>.
