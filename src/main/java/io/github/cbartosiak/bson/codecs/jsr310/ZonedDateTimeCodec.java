@@ -36,14 +36,11 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code ZonedDateTime} objects to and from {@code String},
  * such as {@code 2007-12-03T10:15:30+01:00[Europe/Paris]}.
- * </p>
  * <p>
  * Objects are stored in <i>quasi</i> ISO-8601 format, see
  * {@link ZonedDateTime#toString()}.
- * </p>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
  * BSON Types

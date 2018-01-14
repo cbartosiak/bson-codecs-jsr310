@@ -41,14 +41,11 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code YearMonth} objects to and from {@code Decimal128},
  * such as {@code 2017.10}.
- * </p>
  * <p>
  * Objects are stored in {@code %d.%02d} format, where the first part means
  * a year and the latter a month.
- * </p>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
  * BSON Types

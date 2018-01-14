@@ -38,14 +38,11 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code Period} objects to and from {@code String}, such
  * as {@code P6Y3M1D}.
- * </p>
  * <p>
  * Objects are stored in ISO-8601 period format. A zero period is represented as
  * zero days, {@code P0D}.
- * </p>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
  * BSON Types

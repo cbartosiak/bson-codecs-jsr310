@@ -33,6 +33,7 @@ import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 /**
+ * <p>
  * Provides codecs for JSR-310 classes:
  * <ul>
  * <li>{@link DurationCodec}</li>
@@ -51,7 +52,6 @@ import org.bson.codecs.configuration.CodecRegistry;
  * </ul>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  */
 public final class Jsr310CodecProvider
         implements CodecProvider {
