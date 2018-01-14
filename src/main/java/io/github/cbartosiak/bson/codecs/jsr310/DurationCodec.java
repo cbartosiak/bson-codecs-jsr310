@@ -41,14 +41,11 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code Duration} objects to and from {@code Decimal128},
  * such as {@code 1000.000000100}.
- * </p>
  * <p>
  * Objects are stored in {@code %d.%09d} format, where the first part means
  * seconds and the latter nanoseconds.
- * </p>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
  * BSON Types

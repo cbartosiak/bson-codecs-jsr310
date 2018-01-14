@@ -38,13 +38,10 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code ZoneOffset} objects to and from
  * {@code 32-bit integer}.
- * </p>
  * <p>
  * Objects are stored as total zone offset amounts in seconds.
- * </p>
  * <p>
  * The implementation is <b>thread-safe</b>.
- * </p>
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
  * BSON Types
