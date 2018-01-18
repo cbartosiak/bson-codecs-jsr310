@@ -48,8 +48,7 @@ import org.bson.codecs.EncoderContext;
  * The implementation is <b>thread-safe</b>.
  *
  * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types
- * </a>
+ * BSON Types</a>
  */
 public final class DurationCodec
         implements Codec<Duration> {
