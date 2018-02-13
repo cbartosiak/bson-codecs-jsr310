@@ -1,6 +1,6 @@
 ## BSON codecs for Java 8 Date and Time API (JSR-310)
 
-[![Build Status](https://travis-ci.org/cbartosiak/bson-codecs-jsr310.svg?branch=2.0.0)](https://travis-ci.org/cbartosiak/bson-codecs-jsr310)
+[![Build Status](https://travis-ci.org/cbartosiak/bson-codecs-jsr310.svg?branch=2.0.1)](https://travis-ci.org/cbartosiak/bson-codecs-jsr310)
 
 This library provides codecs for the following JSR-310 classes:
 * `java.time.Duration`
@@ -24,7 +24,7 @@ The library is available in Maven Central Repository:
 <dependency>
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
