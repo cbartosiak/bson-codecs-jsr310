@@ -26,15 +26,12 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code OffsetTime} objects to and from {@code String},
- * such as {@code 10:15:30+01:00}.
+ * Encodes and decodes {@code OffsetTime} values to and from
+ * {@code BSON String}, such as {@code 10:15:30+01:00}.
  * <p>
- * Objects are stored in ISO-8601 formats, see {@link OffsetTime#toString()}.
+ * Values are stored in ISO-8601 formats, see {@link OffsetTime#toString()}.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * This type is <b>immutable</b>.
  */
 public final class OffsetTimeCodec
         implements Codec<OffsetTime> {

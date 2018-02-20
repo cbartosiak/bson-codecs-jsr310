@@ -31,16 +31,13 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Duration} objects to and from {@code Decimal128},
- * such as {@code 1000.000000100}.
+ * Encodes and decodes {@code Duration} values to and from
+ * {@code BSON Decimal128}, such as {@code 10.100000000}.
  * <p>
- * Objects are stored in {@code %d.%09d} format, where the first part means
+ * Values are stored in {@code %d.%09d} format, where the first part represents
  * seconds and the latter nanoseconds.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * This type is <b>immutable</b>.
  */
 public final class DurationCodec
         implements Codec<Duration> {

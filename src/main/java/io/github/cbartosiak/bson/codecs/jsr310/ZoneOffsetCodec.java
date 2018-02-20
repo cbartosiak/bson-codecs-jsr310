@@ -28,15 +28,11 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code ZoneOffset} objects to and from
- * {@code 32-bit integer}.
+ * Encodes and decodes {@code ZoneOffset} values to and from {@code BSON Int32}.
  * <p>
- * Objects are stored as total zone offset amounts in seconds.
+ * Values are stored as total zone offset amounts in seconds.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * This type is <b>immutable</b>.
  */
 public final class ZoneOffsetCodec
         implements Codec<ZoneOffset> {

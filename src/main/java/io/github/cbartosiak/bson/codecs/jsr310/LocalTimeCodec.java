@@ -30,12 +30,13 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code LocalTime} objects to and from {@code Date}.
+ * Encodes and decodes {@code LocalTime} values to and from
+ * {@code BSON DateTime}.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * Values are stored with the date part representing Unix epoch day (1970-01-01)
+ * and with UTC zone offset.
+ * <p>
+ * This type is <b>immutable</b>.
  */
 public final class LocalTimeCodec
         implements Codec<LocalTime> {

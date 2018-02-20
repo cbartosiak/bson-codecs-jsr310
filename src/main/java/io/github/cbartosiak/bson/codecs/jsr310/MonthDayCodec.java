@@ -31,16 +31,13 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code MonthDay} objects to and from {@code Decimal128},
- * such as {@code 1.18}.
+ * Encodes and decodes {@code MonthDay} values to and from
+ * {@code BSON Decimal128}, such as {@code 1.18}.
  * <p>
- * Objects are stored in {@code %d.%02d} format, where the first part means
- * a month and the latter a day of the month.
+ * Values are stored in {@code %d.%02d} format, where the first part represents
+ * a month and the latter a day of this month.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * This type is <b>immutable</b>.
  */
 public final class MonthDayCodec
         implements Codec<MonthDay> {

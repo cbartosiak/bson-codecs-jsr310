@@ -28,12 +28,9 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Instant} objects to and from {@code Date}.
+ * Encodes and decodes {@code Instant} values to and from {@code BSON DateTime}.
  * <p>
- * The implementation is <b>thread-safe</b>.
- *
- * @see <a href="https://docs.mongodb.com/manual/reference/bson-types/">
- * BSON Types</a>
+ * This type is <b>immutable</b>.
  */
 public final class InstantCodec
         implements Codec<Instant> {
