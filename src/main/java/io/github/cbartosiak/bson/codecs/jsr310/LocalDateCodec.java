@@ -16,14 +16,13 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
-import static java.lang.String.format;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.ZoneOffset.UTC;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -49,18 +48,14 @@ public final class LocalDateCodec
             LocalDate value,
             EncoderContext encoderContext) {
 
-        try {
-            writer.writeDateTime(
-                    value.atStartOfDay()
-                         .toInstant(UTC)
-                         .toEpochMilli()
-            );
-        }
-        catch (ArithmeticException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %s is not supported", value
-            ), ex);
-        }
+        translateEncodeExceptions(
+                () -> value,
+                val -> writer.writeDateTime(
+                        val.atStartOfDay()
+                           .toInstant(UTC)
+                           .toEpochMilli()
+                )
+        );
     }
 
     @Override
@@ -68,17 +63,13 @@ public final class LocalDateCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        long dateTime = reader.readDateTime();
-        try {
-            return ofEpochMilli(dateTime)
-                    .atOffset(UTC)
-                    .toLocalDate();
-        }
-        catch (DateTimeException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %d is not supported", dateTime
-            ), ex);
-        }
+        return translateDecodeExceptions(
+                reader::readDateTime,
+                val -> ofEpochMilli(val)
+                        .atOffset(UTC)
+                        .toLocalDate()
+
+        );
     }
 
     @Override

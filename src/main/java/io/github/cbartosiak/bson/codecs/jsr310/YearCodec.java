@@ -16,13 +16,10 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
-import static java.lang.String.format;
-import static java.time.Year.of;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.DateTimeException;
 import java.time.Year;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -55,15 +52,10 @@ public final class YearCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        int int32 = reader.readInt32();
-        try {
-            return of(int32);
-        }
-        catch (DateTimeException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %d is not supported", int32
-            ), ex);
-        }
+        return translateDecodeExceptions(
+                reader::readInt32,
+                Year::of
+        );
     }
 
     @Override

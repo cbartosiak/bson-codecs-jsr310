@@ -16,6 +16,8 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
 import static java.time.YearMonth.of;
 import static org.bson.types.Decimal128.parse;
@@ -23,13 +25,11 @@ import static org.bson.types.Decimal128.parse;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.types.Decimal128;
 
 /**
  * <p>
@@ -50,19 +50,14 @@ public final class YearMonthCodec
             YearMonth value,
             EncoderContext encoderContext) {
 
-        String valueStr = format(
-                "%d.%02d",
-                value.getYear(),
-                value.getMonthValue()
+        translateEncodeExceptions(
+                () -> value,
+                val -> writer.writeDecimal128(parse(format(
+                        "%d.%02d",
+                        val.getYear(),
+                        val.getMonthValue()
+                )))
         );
-        try {
-            writer.writeDecimal128(parse(valueStr));
-        }
-        catch (NumberFormatException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %s is not supported", valueStr
-            ), ex);
-        }
     }
 
     @Override
@@ -70,21 +65,19 @@ public final class YearMonthCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        Decimal128 decimal128 = reader.readDecimal128();
-        try {
-            BigDecimal bigDecimal = decimal128.bigDecimalValue();
-            int year = bigDecimal.intValue();
-            int month = bigDecimal.subtract(new BigDecimal(year))
-                                  .scaleByPowerOfTen(2)
-                                  .abs()
-                                  .intValue();
-            return of(year, month);
-        }
-        catch (ArithmeticException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %s is not supported", decimal128
-            ), ex);
-        }
+        //noinspection OverlyLongLambda
+        return translateDecodeExceptions(
+                reader::readDecimal128,
+                val -> {
+                    BigDecimal bigDecimal = val.bigDecimalValue();
+                    int year = bigDecimal.intValue();
+                    int month = bigDecimal.subtract(new BigDecimal(year))
+                                          .scaleByPowerOfTen(2)
+                                          .abs()
+                                          .intValue();
+                    return of(year, month);
+                }
+        );
     }
 
     @Override

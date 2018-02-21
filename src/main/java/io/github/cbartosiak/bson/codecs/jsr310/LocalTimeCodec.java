@@ -16,15 +16,14 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
-import static java.lang.String.format;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDate.ofEpochDay;
 import static java.time.ZoneOffset.UTC;
 
-import java.time.DateTimeException;
 import java.time.LocalTime;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -52,18 +51,14 @@ public final class LocalTimeCodec
             LocalTime value,
             EncoderContext encoderContext) {
 
-        try {
-            writer.writeDateTime(
-                    value.atDate(ofEpochDay(0L))
-                         .toInstant(UTC)
-                         .toEpochMilli()
-            );
-        }
-        catch (DateTimeException | ArithmeticException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %s is not supported", value
-            ), ex);
-        }
+        translateEncodeExceptions(
+                () -> value,
+                val -> writer.writeDateTime(
+                        val.atDate(ofEpochDay(0L))
+                           .toInstant(UTC)
+                           .toEpochMilli()
+                )
+        );
     }
 
     @Override
@@ -71,17 +66,12 @@ public final class LocalTimeCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        long dateTime = reader.readDateTime();
-        try {
-            return ofEpochMilli(dateTime)
-                    .atOffset(UTC)
-                    .toLocalTime();
-        }
-        catch (DateTimeException ex) {
-            throw new BsonInvalidOperationException(format(
-                    "The value %d is not supported", dateTime
-            ), ex);
-        }
+        return translateDecodeExceptions(
+                reader::readDateTime,
+                val -> ofEpochMilli(val)
+                        .atOffset(UTC)
+                        .toLocalTime()
+        );
     }
 
     @Override
