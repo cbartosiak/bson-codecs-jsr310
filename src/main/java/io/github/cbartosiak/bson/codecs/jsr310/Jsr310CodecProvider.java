@@ -16,8 +16,6 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
-import static java.lang.String.format;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * <p>
- * Provides JSR-310 codecs:
+ * Provides the following JSR-310 based codecs:
  * <ul>
  * <li>{@link DurationCodec}
  * <li>{@link InstantCodec}
@@ -49,13 +47,9 @@ import org.bson.codecs.configuration.CodecRegistry;
 public final class Jsr310CodecProvider
         implements CodecProvider {
 
-    private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
+    private static final Map<Class<?>, Codec<?>> CODECS = new HashMap<>();
 
-    /**
-     * Creates a {@code Jsr310CodecProvider}.
-     */
-    @SuppressWarnings("OverlyCoupledMethod")
-    public Jsr310CodecProvider() {
+    static {
         putCodec(new DurationCodec());
         putCodec(new InstantCodec());
         putCodec(new LocalDateCodec());
@@ -71,34 +65,13 @@ public final class Jsr310CodecProvider
         putCodec(new ZoneOffsetCodec());
     }
 
-    @SuppressWarnings("unchecked")
+    private static void putCodec(Codec<?> codec) {
+        CODECS.put(codec.getEncoderClass(), codec);
+    }
+
     @Override
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
-        return (Codec<T>)codecs.get(clazz);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) { return true; }
-        if (obj == null || getClass() != obj.getClass()) { return false; }
-
-        Jsr310CodecProvider rhs = (Jsr310CodecProvider)obj;
-
-        return codecs.equals(rhs.codecs);
-    }
-
-    @Override
-    public int hashCode() {
-        return codecs.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return format("Jsr310CodecProvider[codecs=%s]", codecs);
-    }
-
-    @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-    private <T> void putCodec(Codec<T> codec) {
-        codecs.put(codec.getEncoderClass(), codec);
+        //noinspection unchecked
+        return (Codec<T>)CODECS.get(clazz);
     }
 }
