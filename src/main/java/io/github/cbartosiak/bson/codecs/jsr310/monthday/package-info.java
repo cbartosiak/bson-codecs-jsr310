@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains core commons.
+ * Contains {@code MonthDay} codecs.
  */
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.monthday;

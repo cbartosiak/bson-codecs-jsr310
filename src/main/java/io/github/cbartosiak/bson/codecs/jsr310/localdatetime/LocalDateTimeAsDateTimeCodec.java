@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.localdatetime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
+import static java.time.Instant.ofEpochMilli;
+import static java.time.ZoneOffset.UTC;
 
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,38 +31,48 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code ZoneOffset} values to and from
- * {@code BSON Int32}.
+ * Encodes and decodes {@code LocalDateTime} values to and from
+ * {@code BSON DateTime}.
  * <p>
- * Values are stored as total zone offset amounts in seconds.
+ * Values are stored with UTC zone offset.
+ * <p>
+ * Note it loses the nanoseconds precision.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class ZoneOffsetCodec
-        implements Codec<ZoneOffset> {
+public final class LocalDateTimeAsDateTimeCodec
+        implements Codec<LocalDateTime> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            ZoneOffset value,
+            LocalDateTime value,
             EncoderContext encoderContext) {
 
-        writer.writeInt32(value.getTotalSeconds());
-    }
-
-    @Override
-    public ZoneOffset decode(
-            BsonReader reader,
-            DecoderContext decoderContext) {
-
-        return translateDecodeExceptions(
-                reader::readInt32,
-                ZoneOffset::ofTotalSeconds
+        translateEncodeExceptions(
+                () -> value,
+                val -> writer.writeDateTime(
+                        val.toInstant(UTC)
+                           .toEpochMilli()
+                )
         );
     }
 
     @Override
-    public Class<ZoneOffset> getEncoderClass() {
-        return ZoneOffset.class;
+    public LocalDateTime decode(
+            BsonReader reader,
+            DecoderContext decoderContext) {
+
+        return translateDecodeExceptions(
+                reader::readDateTime,
+                val -> ofEpochMilli(val)
+                        .atOffset(UTC)
+                        .toLocalDateTime()
+        );
+    }
+
+    @Override
+    public Class<LocalDateTime> getEncoderClass() {
+        return LocalDateTime.class;
     }
 }

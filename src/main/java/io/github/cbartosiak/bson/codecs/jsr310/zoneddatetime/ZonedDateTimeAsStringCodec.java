@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.Year;
+import java.time.ZonedDateTime;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,38 +28,39 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Year} values to and from
- * {@code BSON Int32}.
+ * Encodes and decodes {@code ZonedDateTime} values to and from
+ * {@code BSON String}, such as {@code 2007-12-03T10:15:30+01:00[Europe/Paris]}.
  * <p>
- * Values are stored as ISO proleptic year integers.
+ * Values are stored in <i>quasi</i> ISO-8601 format,
+ * see {@link ZonedDateTime#toString()}.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class YearCodec
-        implements Codec<Year> {
+public final class ZonedDateTimeAsStringCodec
+        implements Codec<ZonedDateTime> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            Year value,
+            ZonedDateTime value,
             EncoderContext encoderContext) {
 
-        writer.writeInt32(value.getValue());
+        writer.writeString(value.toString());
     }
 
     @Override
-    public Year decode(
+    public ZonedDateTime decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                reader::readInt32,
-                Year::of
+                reader::readString,
+                ZonedDateTime::parse
         );
     }
 
     @Override
-    public Class<Year> getEncoderClass() {
-        return Year.class;
+    public Class<ZonedDateTime> getEncoderClass() {
+        return ZonedDateTime.class;
     }
 }

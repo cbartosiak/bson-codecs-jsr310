@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.offsetdatetime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,39 +28,39 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code ZonedDateTime} values to and from
- * {@code BSON String}, such as {@code 2007-12-03T10:15:30+01:00[Europe/Paris]}.
+ * Encodes and decodes {@code OffsetDateTime} values to and from
+ * {@code BSON String}, such as {@code 2007-12-03T10:15:30+01:00}.
  * <p>
- * Values are stored in <i>quasi</i> ISO-8601 format,
- * see {@link ZonedDateTime#toString()}.
+ * Values are stored in ISO-8601 formats,
+ * see {@link OffsetDateTime#toString()}.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class ZonedDateTimeCodec
-        implements Codec<ZonedDateTime> {
+public final class OffsetDateTimeAsStringCodec
+        implements Codec<OffsetDateTime> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            ZonedDateTime value,
+            OffsetDateTime value,
             EncoderContext encoderContext) {
 
         writer.writeString(value.toString());
     }
 
     @Override
-    public ZonedDateTime decode(
+    public OffsetDateTime decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
                 reader::readString,
-                ZonedDateTime::parse
+                OffsetDateTime::parse
         );
     }
 
     @Override
-    public Class<ZonedDateTime> getEncoderClass() {
-        return ZonedDateTime.class;
+    public Class<OffsetDateTime> getEncoderClass() {
+        return OffsetDateTime.class;
     }
 }

@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.zoneoffset;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
-import static java.time.Instant.ofEpochMilli;
-import static java.time.ZoneOffset.UTC;
 
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -31,48 +28,38 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code LocalDateTime} values to and from
- * {@code BSON DateTime}.
+ * Encodes and decodes {@code ZoneOffset} values to and from
+ * {@code BSON Int32}.
  * <p>
- * Values are stored with UTC zone offset.
- * <p>
- * Note it loses the nanoseconds precision.
+ * Values are stored as total zone offset amounts in seconds.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalDateTimeCodec
-        implements Codec<LocalDateTime> {
+public final class ZoneOffsetAsInt32Codec
+        implements Codec<ZoneOffset> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            LocalDateTime value,
+            ZoneOffset value,
             EncoderContext encoderContext) {
 
-        translateEncodeExceptions(
-                () -> value,
-                val -> writer.writeDateTime(
-                        val.toInstant(UTC)
-                           .toEpochMilli()
-                )
-        );
+        writer.writeInt32(value.getTotalSeconds());
     }
 
     @Override
-    public LocalDateTime decode(
+    public ZoneOffset decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                reader::readDateTime,
-                val -> ofEpochMilli(val)
-                        .atOffset(UTC)
-                        .toLocalDateTime()
+                reader::readInt32,
+                ZoneOffset::ofTotalSeconds
         );
     }
 
     @Override
-    public Class<LocalDateTime> getEncoderClass() {
-        return LocalDateTime.class;
+    public Class<ZoneOffset> getEncoderClass() {
+        return ZoneOffset.class;
     }
 }

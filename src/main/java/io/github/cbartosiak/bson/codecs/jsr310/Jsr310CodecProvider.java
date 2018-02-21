@@ -19,27 +19,40 @@ package io.github.cbartosiak.bson.codecs.jsr310;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.cbartosiak.bson.codecs.jsr310.duration.DurationAsDecimal128Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.instant.InstantAsDateTimeCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDateTimeCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDateTimeCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDateTimeCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.monthday.MonthDayAsDecimal128Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.offsetdatetime.OffsetDateTimeAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.offsettime.OffsetTimeAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.period.PeriodAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.year.YearAsInt32Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.yearmonth.YearMonthAsDecimal128Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime.ZonedDateTimeAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * <p>
- * Provides the following JSR-310 based codecs:
+ * Provides the following JSR-310 related codecs:
  * <ul>
- * <li>{@link DurationCodec}
- * <li>{@link InstantCodec}
- * <li>{@link LocalDateCodec}
- * <li>{@link LocalDateTimeCodec}
- * <li>{@link LocalTimeCodec}
- * <li>{@link MonthDayCodec}
- * <li>{@link OffsetDateTimeCodec}
- * <li>{@link OffsetTimeCodec}
- * <li>{@link PeriodCodec}
- * <li>{@link YearCodec}
- * <li>{@link YearMonthCodec}
- * <li>{@link ZonedDateTimeCodec}
- * <li>{@link ZoneOffsetCodec}
+ * <li>{@link DurationAsDecimal128Codec}
+ * <li>{@link InstantAsDateTimeCodec}
+ * <li>{@link LocalDateAsDateTimeCodec}
+ * <li>{@link LocalDateTimeAsDateTimeCodec}
+ * <li>{@link LocalTimeAsDateTimeCodec}
+ * <li>{@link MonthDayAsDecimal128Codec}
+ * <li>{@link OffsetDateTimeAsStringCodec}
+ * <li>{@link OffsetTimeAsStringCodec}
+ * <li>{@link PeriodAsStringCodec}
+ * <li>{@link YearAsInt32Codec}
+ * <li>{@link YearMonthAsDecimal128Codec}
+ * <li>{@link ZonedDateTimeAsStringCodec}
+ * <li>{@link ZoneOffsetAsInt32Codec}
  * </ul>
  * <p>
  * This type is <b>immutable</b>.
@@ -50,19 +63,19 @@ public final class Jsr310CodecProvider
     private static final Map<Class<?>, Codec<?>> CODECS = new HashMap<>();
 
     static {
-        putCodec(new DurationCodec());
-        putCodec(new InstantCodec());
-        putCodec(new LocalDateCodec());
-        putCodec(new LocalDateTimeCodec());
-        putCodec(new LocalTimeCodec());
-        putCodec(new MonthDayCodec());
-        putCodec(new OffsetDateTimeCodec());
-        putCodec(new OffsetTimeCodec());
-        putCodec(new PeriodCodec());
-        putCodec(new YearCodec());
-        putCodec(new YearMonthCodec());
-        putCodec(new ZonedDateTimeCodec());
-        putCodec(new ZoneOffsetCodec());
+        putCodec(new DurationAsDecimal128Codec());
+        putCodec(new InstantAsDateTimeCodec());
+        putCodec(new LocalDateAsDateTimeCodec());
+        putCodec(new LocalDateTimeAsDateTimeCodec());
+        putCodec(new LocalTimeAsDateTimeCodec());
+        putCodec(new MonthDayAsDecimal128Codec());
+        putCodec(new OffsetDateTimeAsStringCodec());
+        putCodec(new OffsetTimeAsStringCodec());
+        putCodec(new PeriodAsStringCodec());
+        putCodec(new YearAsInt32Codec());
+        putCodec(new YearMonthAsDecimal128Codec());
+        putCodec(new ZonedDateTimeAsStringCodec());
+        putCodec(new ZoneOffsetAsInt32Codec());
     }
 
     private static void putCodec(Codec<?> codec) {

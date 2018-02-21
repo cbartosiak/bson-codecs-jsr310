@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains core commons.
+ * Contains {@code OffsetTime} codecs.
  */
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.offsettime;

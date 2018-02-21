@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.year;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 
-import java.time.Instant;
+import java.time.Year;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -29,41 +28,38 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Instant} values to and from
- * {@code BSON DateTime}.
+ * Encodes and decodes {@code Year} values to and from
+ * {@code BSON Int32}.
  * <p>
- * Note it loses the nanoseconds precision.
+ * Values are stored as ISO proleptic year integers.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class InstantCodec
-        implements Codec<Instant> {
+public final class YearAsInt32Codec
+        implements Codec<Year> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            Instant value,
+            Year value,
             EncoderContext encoderContext) {
 
-        translateEncodeExceptions(
-                () -> value,
-                val -> writer.writeDateTime(val.toEpochMilli())
-        );
+        writer.writeInt32(value.getValue());
     }
 
     @Override
-    public Instant decode(
+    public Year decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                reader::readDateTime,
-                Instant::ofEpochMilli
+                reader::readInt32,
+                Year::of
         );
     }
 
     @Override
-    public Class<Instant> getEncoderClass() {
-        return Instant.class;
+    public Class<Year> getEncoderClass() {
+        return Year.class;
     }
 }

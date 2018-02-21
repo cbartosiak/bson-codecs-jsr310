@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 
-import java.time.Period;
+import java.time.Instant;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,39 +29,41 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Period} values to and from
- * {@code BSON String}, such as {@code P6Y3M1D}.
+ * Encodes and decodes {@code Instant} values to and from
+ * {@code BSON DateTime}.
  * <p>
- * Values are stored in ISO-8601 period format. A zero period is represented as
- * zero days, {@code P0D}.
+ * Note it loses the nanoseconds precision.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class PeriodCodec
-        implements Codec<Period> {
+public final class InstantAsDateTimeCodec
+        implements Codec<Instant> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            Period value,
+            Instant value,
             EncoderContext encoderContext) {
 
-        writer.writeString(value.toString());
-    }
-
-    @Override
-    public Period decode(
-            BsonReader reader,
-            DecoderContext decoderContext) {
-
-        return translateDecodeExceptions(
-                reader::readString,
-                Period::parse
+        translateEncodeExceptions(
+                () -> value,
+                val -> writer.writeDateTime(val.toEpochMilli())
         );
     }
 
     @Override
-    public Class<Period> getEncoderClass() {
-        return Period.class;
+    public Instant decode(
+            BsonReader reader,
+            DecoderContext decoderContext) {
+
+        return translateDecodeExceptions(
+                reader::readDateTime,
+                Instant::ofEpochMilli
+        );
+    }
+
+    @Override
+    public Class<Instant> getEncoderClass() {
+        return Instant.class;
     }
 }

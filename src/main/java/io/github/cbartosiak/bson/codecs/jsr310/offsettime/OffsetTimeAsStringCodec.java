@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.offsettime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
@@ -36,7 +36,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class OffsetTimeCodec
+public final class OffsetTimeAsStringCodec
         implements Codec<OffsetTime> {
 
     @Override

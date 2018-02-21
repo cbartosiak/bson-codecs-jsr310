@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.duration;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
-import static java.time.MonthDay.of;
+import static java.time.Duration.ofSeconds;
 import static org.bson.types.Decimal128.parse;
 
 import java.math.BigDecimal;
-import java.time.MonthDay;
+import java.time.Duration;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -33,35 +33,35 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code MonthDay} values to and from
- * {@code BSON Decimal128}, such as {@code 1.18}.
+ * Encodes and decodes {@code Duration} values to and from
+ * {@code BSON Decimal128}, such as {@code 10.100000000}.
  * <p>
- * Values are stored in {@code %d.%02d} format, where the first part represents
- * a month and the latter a day of this month.
+ * Values are stored in {@code %d.%09d} format, where the first part represents
+ * seconds and the latter nanoseconds.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class MonthDayCodec
-        implements Codec<MonthDay> {
+public final class DurationAsDecimal128Codec
+        implements Codec<Duration> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            MonthDay value,
+            Duration value,
             EncoderContext encoderContext) {
 
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDecimal128(parse(format(
-                        "%d.%02d",
-                        val.getMonthValue(),
-                        val.getDayOfMonth()
+                        "%d.%09d",
+                        val.getSeconds(),
+                        val.getNano()
                 )))
         );
     }
 
     @Override
-    public MonthDay decode(
+    public Duration decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
@@ -70,17 +70,18 @@ public final class MonthDayCodec
                 reader::readDecimal128,
                 val -> {
                     BigDecimal bigDecimal = val.bigDecimalValue();
-                    int month = bigDecimal.intValue();
-                    int day = bigDecimal.subtract(new BigDecimal(month))
-                                        .scaleByPowerOfTen(2)
-                                        .intValue();
-                    return of(month, day);
+                    long seconds = bigDecimal.longValue();
+                    int nanos = bigDecimal.subtract(new BigDecimal(seconds))
+                                          .scaleByPowerOfTen(9)
+                                          .abs()
+                                          .intValue();
+                    return ofSeconds(seconds, nanos);
                 }
         );
     }
 
     @Override
-    public Class<MonthDay> getEncoderClass() {
-        return MonthDay.class;
+    public Class<Duration> getEncoderClass() {
+        return Duration.class;
     }
 }

@@ -14,7 +14,23 @@
  * limitations under the License.
  */
 
-/**
- * Contains core commons.
- */
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.year;
+
+import java.time.Year;
+
+import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.junit.jupiter.api.Test;
+
+final class YearCodecsTests
+        extends AbstractCodecsTests {
+
+    private YearCodecsTests() {}
+
+    @Test
+    void testYearAsInt32Codec() {
+        YearAsInt32Codec yearCodec = new YearAsInt32Codec();
+        testCodec(yearCodec, Year.of(Year.MIN_VALUE));
+        testCodec(yearCodec, Year.of(Year.MAX_VALUE));
+        testCodec(yearCodec, Year.now());
+    }
+}

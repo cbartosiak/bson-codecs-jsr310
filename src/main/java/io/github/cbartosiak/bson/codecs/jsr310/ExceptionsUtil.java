@@ -25,11 +25,34 @@ import java.util.function.Supplier;
 
 import org.bson.BsonInvalidOperationException;
 
-final class ExceptionsUtil {
+/**
+ * <p>
+ * Contains translators for exceptions thrown during encoding and decoding.
+ * <p>
+ * This type is a <b>utilities</b> container and cannot be instantiated.
+ */
+public final class ExceptionsUtil {
 
     private ExceptionsUtil() {}
 
-    static <Value> void translateEncodeExceptions(
+    /**
+     * <p>
+     * Translates exceptions thrown during encoding into
+     * {@code BsonInvalidOperationException}. The value supplier is used to get
+     * a value to encode by the value consumer.
+     * <p>
+     * The following exceptions are translated:
+     * <ul>
+     * <li>{@code NumberFormatException};
+     * <li>{@code ArithmeticException};
+     * <li>{@code DateTimeException}.
+     * </ul>
+     *
+     * @param valueSupplier not null
+     * @param valueConsumer not null
+     * @param <Value>       the value type
+     */
+    public static <Value> void translateEncodeExceptions(
             Supplier<Value> valueSupplier,
             Consumer<Value> valueConsumer) {
 
@@ -51,7 +74,26 @@ final class ExceptionsUtil {
         }
     }
 
-    static <Value, Result> Result translateDecodeExceptions(
+    /**
+     * <p>
+     * Translates exceptions thrown during decoding into
+     * {@code BsonInvalidOperationException}. The value supplier is used to get
+     * a value to decode by the value converter.
+     * <p>
+     * The following exceptions are translated:
+     * <ul>
+     * <li>{@code ArithmeticException};
+     * <li>{@code DateTimeException}.
+     * </ul>
+     *
+     * @param valueSupplier  not null
+     * @param valueConverter not null
+     * @param <Value>        the value type
+     * @param <Result>       the result type
+     *
+     * @return the value converter {@code Result}
+     */
+    public static <Value, Result> Result translateDecodeExceptions(
             Supplier<Value> valueSupplier,
             Function<Value, Result> valueConverter) {
 
