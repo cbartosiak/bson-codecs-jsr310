@@ -28,7 +28,8 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Year} values to and from {@code BSON Int32}.
+ * Encodes and decodes {@code Year} values to and from
+ * {@code BSON Int32}.
  * <p>
  * Values are stored as ISO proleptic year integers.
  * <p>

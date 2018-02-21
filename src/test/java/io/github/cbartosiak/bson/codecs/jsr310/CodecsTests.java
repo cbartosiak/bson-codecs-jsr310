@@ -19,7 +19,6 @@ package io.github.cbartosiak.bson.codecs.jsr310;
 import static java.nio.ByteBuffer.wrap;
 import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -43,12 +42,46 @@ import org.bson.codecs.EncoderContext;
 import org.bson.io.BasicOutputBuffer;
 import org.bson.io.BsonOutput;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 
-@TestInstance(PER_CLASS)
 final class CodecsTests {
 
     private CodecsTests() {}
+
+    private static <T> void testCodec(Codec<T> codec, T value) {
+        try (BasicOutputBuffer output = new BasicOutputBuffer()) {
+
+            encode(output, codec, value);
+
+            T decoded = decode(wrap(output.toByteArray()), codec);
+
+            assertEquals(value, decoded);
+        }
+    }
+
+    private static <T> void encode(BsonOutput output, Codec<T> codec, T value) {
+        try (BsonBinaryWriter writer = new BsonBinaryWriter(output)) {
+
+            writer.writeStartDocument();
+            writer.writeName("value");
+
+            codec.encode(writer, value, EncoderContext.builder().build());
+
+            writer.writeEndDocument();
+            writer.close();
+        }
+    }
+
+    private static <T> T decode(ByteBuffer byteBuffer, Codec<T> codec) {
+        try (BsonBinaryReader reader = new BsonBinaryReader(byteBuffer)) {
+
+            reader.readStartDocument();
+
+            String name = reader.readName();
+            assertEquals("value", name);
+
+            return codec.decode(reader, DecoderContext.builder().build());
+        }
+    }
 
     @Test
     void testDurationCodec() {
@@ -113,44 +146,5 @@ final class CodecsTests {
     @Test
     void testZoneOffsetCodec() {
         testCodec(new ZoneOffsetCodec(), UTC);
-    }
-
-    private <T> void testCodec(Codec<T> codec, T value) {
-        try (BasicOutputBuffer output = new BasicOutputBuffer()) {
-
-            encodeValue(output, codec, value);
-
-            T decoded = decodeValue(
-                    wrap(output.toByteArray()),
-                    codec
-            );
-
-            assertEquals(value, decoded);
-        }
-    }
-
-    private <T> void encodeValue(BsonOutput output, Codec<T> codec, T value) {
-        try (BsonBinaryWriter writer = new BsonBinaryWriter(output)) {
-
-            writer.writeStartDocument();
-            writer.writeName("value");
-
-            codec.encode(writer, value, EncoderContext.builder().build());
-
-            writer.writeEndDocument();
-            writer.close();
-        }
-    }
-
-    private <T> T decodeValue(ByteBuffer byteBuffer, Codec<T> codec) {
-        try (BsonBinaryReader reader = new BsonBinaryReader(byteBuffer)) {
-
-            reader.readStartDocument();
-
-            String name = reader.readName();
-            assertEquals("value", name);
-
-            return codec.decode(reader, DecoderContext.builder().build());
-        }
     }
 }

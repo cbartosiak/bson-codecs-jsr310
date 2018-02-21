@@ -32,8 +32,8 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code LocalDate} values to and from
  * {@code BSON DateTime}.
  * <p>
- * Values are stored with the time part representing a start of a day and with
- * UTC zone offset.
+ * Values are stored with the time part representing a start of a day
+ * and with UTC zone offset.
  * <p>
  * This type is <b>immutable</b>.
  */

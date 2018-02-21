@@ -16,9 +16,10 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
+import static java.lang.String.format;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -26,7 +27,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 /**
  * <p>
- * Provides codecs for JSR-310 classes:
+ * Provides JSR-310 codecs:
  * <ul>
  * <li>{@link DurationCodec}
  * <li>{@link InstantCodec}
@@ -43,7 +44,7 @@ import org.bson.codecs.configuration.CodecRegistry;
  * <li>{@link ZoneOffsetCodec}
  * </ul>
  * <p>
- * The implementation is <b>thread-safe</b>.
+ * This type is <b>immutable</b>.
  */
 public final class Jsr310CodecProvider
         implements CodecProvider {
@@ -78,22 +79,22 @@ public final class Jsr310CodecProvider
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) { return true; }
-        if (obj == null || obj.getClass() != getClass()) { return false; }
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+
         Jsr310CodecProvider rhs = (Jsr310CodecProvider)obj;
-        return Objects.equals(rhs.codecs, codecs);
+
+        return codecs.equals(rhs.codecs);
     }
 
     @Override
     public int hashCode() {
-        return codecs != null ? codecs.hashCode() : 0;
+        return codecs.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Jsr310CodecProvider{" +
-               "codecs=" + codecs +
-               '}';
+        return format("Jsr310CodecProvider[codecs=%s]", codecs);
     }
 
     @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")

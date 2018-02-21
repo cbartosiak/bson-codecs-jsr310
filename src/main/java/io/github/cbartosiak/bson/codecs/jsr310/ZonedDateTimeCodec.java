@@ -29,8 +29,8 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code ZonedDateTime} values to and from
  * {@code BSON String}, such as {@code 2007-12-03T10:15:30+01:00[Europe/Paris]}.
  * <p>
- * Values are stored in <i>quasi</i> ISO-8601 format, see
- * {@link ZonedDateTime#toString()}.
+ * Values are stored in <i>quasi</i> ISO-8601 format,
+ * see {@link ZonedDateTime#toString()}.
  * <p>
  * This type is <b>immutable</b>.
  */

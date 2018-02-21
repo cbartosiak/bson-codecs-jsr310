@@ -28,7 +28,8 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code ZoneOffset} values to and from {@code BSON Int32}.
+ * Encodes and decodes {@code ZoneOffset} values to and from
+ * {@code BSON Int32}.
  * <p>
  * Values are stored as total zone offset amounts in seconds.
  * <p>

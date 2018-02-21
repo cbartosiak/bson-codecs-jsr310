@@ -28,7 +28,8 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Instant} values to and from {@code BSON DateTime}.
+ * Encodes and decodes {@code Instant} values to and from
+ * {@code BSON DateTime}.
  * <p>
  * This type is <b>immutable</b>.
  */

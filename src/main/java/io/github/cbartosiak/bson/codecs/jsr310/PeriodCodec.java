@@ -28,8 +28,8 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code Period} values to and from {@code BSON String},
- * such as {@code P6Y3M1D}.
+ * Encodes and decodes {@code Period} values to and from
+ * {@code BSON String}, such as {@code P6Y3M1D}.
  * <p>
  * Values are stored in ISO-8601 period format. A zero period is represented as
  * zero days, {@code P0D}.

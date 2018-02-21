@@ -29,7 +29,8 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code OffsetTime} values to and from
  * {@code BSON String}, such as {@code 10:15:30+01:00}.
  * <p>
- * Values are stored in ISO-8601 formats, see {@link OffsetTime#toString()}.
+ * Values are stored in ISO-8601 formats,
+ * see {@link OffsetTime#toString()}.
  * <p>
  * This type is <b>immutable</b>.
  */
