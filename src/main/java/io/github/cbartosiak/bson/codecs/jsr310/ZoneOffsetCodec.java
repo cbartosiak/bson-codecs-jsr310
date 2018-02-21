@@ -16,10 +16,13 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
+import static java.lang.String.format;
 import static java.time.ZoneOffset.ofTotalSeconds;
 
+import java.time.DateTimeException;
 import java.time.ZoneOffset;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -52,7 +55,15 @@ public final class ZoneOffsetCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        return ofTotalSeconds(reader.readInt32());
+        int int32 = reader.readInt32();
+        try {
+            return ofTotalSeconds(int32);
+        }
+        catch (DateTimeException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %d is not supported", int32
+            ), ex);
+        }
     }
 
     @Override

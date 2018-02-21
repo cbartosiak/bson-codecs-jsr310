@@ -23,11 +23,13 @@ import static org.bson.types.Decimal128.parse;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.types.Decimal128;
 
 /**
  * <p>
@@ -48,11 +50,19 @@ public final class YearMonthCodec
             YearMonth value,
             EncoderContext encoderContext) {
 
-        writer.writeDecimal128(parse(format(
+        String valueStr = format(
                 "%d.%02d",
                 value.getYear(),
                 value.getMonthValue()
-        )));
+        );
+        try {
+            writer.writeDecimal128(parse(valueStr));
+        }
+        catch (NumberFormatException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", valueStr
+            ), ex);
+        }
     }
 
     @Override
@@ -60,17 +70,21 @@ public final class YearMonthCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        BigDecimal value = reader
-                .readDecimal128()
-                .bigDecimalValue();
-        int year = value.intValue();
-        return of(
-                year,
-                value.subtract(new BigDecimal(year))
-                     .scaleByPowerOfTen(2)
-                     .abs()
-                     .intValue()
-        );
+        Decimal128 decimal128 = reader.readDecimal128();
+        try {
+            BigDecimal bigDecimal = decimal128.bigDecimalValue();
+            int year = bigDecimal.intValue();
+            int month = bigDecimal.subtract(new BigDecimal(year))
+                                  .scaleByPowerOfTen(2)
+                                  .abs()
+                                  .intValue();
+            return of(year, month);
+        }
+        catch (ArithmeticException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", decimal128
+            ), ex);
+        }
     }
 
     @Override

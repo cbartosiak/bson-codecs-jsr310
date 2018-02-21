@@ -16,10 +16,13 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
+import static java.lang.String.format;
 import static java.time.Instant.ofEpochMilli;
 
+import java.time.DateTimeException;
 import java.time.Instant;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -30,6 +33,8 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code Instant} values to and from
  * {@code BSON DateTime}.
+ * <p>
+ * Note it loses the nanoseconds precision.
  * <p>
  * This type is <b>immutable</b>.
  */
@@ -42,9 +47,14 @@ public final class InstantCodec
             Instant value,
             EncoderContext encoderContext) {
 
-        writer.writeDateTime(
-                value.toEpochMilli()
-        );
+        try {
+            writer.writeDateTime(value.toEpochMilli());
+        }
+        catch (ArithmeticException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", value
+            ), ex);
+        }
     }
 
     @Override
@@ -52,7 +62,15 @@ public final class InstantCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        return ofEpochMilli(reader.readDateTime());
+        long dateTime = reader.readDateTime();
+        try {
+            return ofEpochMilli(dateTime);
+        }
+        catch (DateTimeException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %d is not supported", dateTime
+            ), ex);
+        }
     }
 
     @Override

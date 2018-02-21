@@ -17,8 +17,8 @@
 package io.github.cbartosiak.bson.codecs.jsr310;
 
 import static java.nio.ByteBuffer.wrap;
-import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -32,10 +32,12 @@ import java.time.OffsetTime;
 import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
+import org.bson.BsonInvalidOperationException;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -85,66 +87,134 @@ final class CodecsTests {
 
     @Test
     void testDurationCodec() {
-        testCodec(new DurationCodec(), Duration.ofHours(12));
+        DurationCodec durationCodec = new DurationCodec();
+        testCodec(durationCodec, Duration.ZERO);
+        testCodec(durationCodec, Duration.ofSeconds(
+                Long.MAX_VALUE, 999_999_999L
+        ));
+        testCodec(durationCodec, Duration.ofHours(12));
     }
 
     @Test
     void testInstantCodec() {
-        testCodec(new InstantCodec(), Instant.now());
+        InstantCodec instantCodec = new InstantCodec();
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(instantCodec, Instant.MIN)
+        );
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(instantCodec, Instant.MAX)
+        );
+        testCodec(instantCodec, Instant.EPOCH);
+        testCodec(instantCodec, Instant.now());
     }
 
     @Test
     void testLocalDateCodec() {
-        testCodec(new LocalDateCodec(), LocalDate.now());
+        LocalDateCodec localDateCodec = new LocalDateCodec();
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(localDateCodec, LocalDate.MIN)
+        );
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(localDateCodec, LocalDate.MAX)
+        );
+        testCodec(localDateCodec, LocalDate.now());
     }
 
     @Test
     void testLocalDateTimeCodec() {
-        testCodec(new LocalDateTimeCodec(), LocalDateTime.now());
+        LocalDateTimeCodec localDateTimeCodec = new LocalDateTimeCodec();
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(localDateTimeCodec, LocalDateTime.MIN)
+        );
+        assertThrows(
+                BsonInvalidOperationException.class,
+                () -> testCodec(localDateTimeCodec, LocalDateTime.MAX)
+        );
+        testCodec(localDateTimeCodec, LocalDateTime.now());
     }
 
     @Test
     void testLocalTimeCodec() {
-        testCodec(new LocalTimeCodec(), LocalTime.now());
+        LocalTimeCodec localTimeCodec = new LocalTimeCodec();
+        testCodec(localTimeCodec, LocalTime.MIN);
+        testCodec(localTimeCodec, LocalTime.MAX.minusNanos(999999));
+        testCodec(localTimeCodec, LocalTime.MIDNIGHT);
+        testCodec(localTimeCodec, LocalTime.NOON);
+        testCodec(localTimeCodec, LocalTime.now());
     }
 
     @Test
     void testMonthDayCodec() {
-        testCodec(new MonthDayCodec(), MonthDay.now());
+        MonthDayCodec monthDayCodec = new MonthDayCodec();
+        testCodec(monthDayCodec, MonthDay.of(1, 1));
+        testCodec(monthDayCodec, MonthDay.of(12, 31));
+        testCodec(monthDayCodec, MonthDay.now());
     }
 
     @Test
     void testOffsetDateTimeCodec() {
-        testCodec(new OffsetDateTimeCodec(), OffsetDateTime.now());
+        OffsetDateTimeCodec offsetDateTimeCodec = new OffsetDateTimeCodec();
+        testCodec(offsetDateTimeCodec, OffsetDateTime.MIN);
+        testCodec(offsetDateTimeCodec, OffsetDateTime.MAX);
+        testCodec(offsetDateTimeCodec, OffsetDateTime.now());
     }
 
     @Test
     void testOffsetTimeCodec() {
-        testCodec(new OffsetTimeCodec(), OffsetTime.now());
+        OffsetTimeCodec offsetTimeCodec = new OffsetTimeCodec();
+        testCodec(offsetTimeCodec, OffsetTime.MIN);
+        testCodec(offsetTimeCodec, OffsetTime.MAX);
+        testCodec(offsetTimeCodec, OffsetTime.now());
     }
 
     @Test
     void testPeriodCodec() {
-        testCodec(new PeriodCodec(), Period.of(1, 6, 15));
+        PeriodCodec periodCodec = new PeriodCodec();
+        testCodec(periodCodec, Period.ZERO);
+        testCodec(periodCodec, Period.of(
+                Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE
+        ));
+        testCodec(periodCodec, Period.of(1, 6, 15));
     }
 
     @Test
     void testYearCodec() {
-        testCodec(new YearCodec(), Year.now());
+        YearCodec yearCodec = new YearCodec();
+        testCodec(yearCodec, Year.of(Year.MIN_VALUE));
+        testCodec(yearCodec, Year.of(Year.MAX_VALUE));
+        testCodec(yearCodec, Year.now());
     }
 
     @Test
     void testYearMonthCodec() {
-        testCodec(new YearMonthCodec(), YearMonth.now());
+        YearMonthCodec yearMonthCodec = new YearMonthCodec();
+        testCodec(yearMonthCodec, YearMonth.of(Year.MIN_VALUE, 1));
+        testCodec(yearMonthCodec, YearMonth.of(Year.MAX_VALUE, 12));
+        testCodec(yearMonthCodec, YearMonth.now());
     }
 
     @Test
     void testZonedDateTimeCodec() {
-        testCodec(new ZonedDateTimeCodec(), ZonedDateTime.now());
+        ZonedDateTimeCodec zonedDateTimeCodec = new ZonedDateTimeCodec();
+        testCodec(zonedDateTimeCodec, ZonedDateTime.of(
+                Year.MIN_VALUE, 1, 1, 0, 0, 0, 0, ZoneOffset.MIN
+        ));
+        testCodec(zonedDateTimeCodec, ZonedDateTime.of(
+                Year.MAX_VALUE, 12, 31, 23, 59, 59, 999, ZoneOffset.MAX
+        ));
+        testCodec(zonedDateTimeCodec, ZonedDateTime.now());
     }
 
     @Test
     void testZoneOffsetCodec() {
-        testCodec(new ZoneOffsetCodec(), UTC);
+        ZoneOffsetCodec zoneOffsetCodec = new ZoneOffsetCodec();
+        testCodec(zoneOffsetCodec, ZoneOffset.MIN);
+        testCodec(zoneOffsetCodec, ZoneOffset.MAX);
+        testCodec(zoneOffsetCodec, ZoneOffset.UTC);
     }
 }

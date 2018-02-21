@@ -16,10 +16,13 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310;
 
+import static java.lang.String.format;
 import static java.time.Period.parse;
 
 import java.time.Period;
+import java.time.format.DateTimeParseException;
 
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -53,7 +56,15 @@ public final class PeriodCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        return parse(reader.readString());
+        String str = reader.readString();
+        try {
+            return parse(str);
+        }
+        catch (DateTimeParseException ex) {
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", str
+            ), ex);
+        }
     }
 
     @Override
