@@ -16,23 +16,31 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.period;
 
+import static java.time.Period.ZERO;
+import static java.time.Period.of;
+
 import java.time.Period;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class PeriodCodecsTests
         extends AbstractCodecsTests {
 
     private PeriodCodecsTests() {}
 
-    @Test
-    void testPeriodAsStringCodec() {
-        PeriodAsStringCodec periodCodec = new PeriodAsStringCodec();
-        testCodec(periodCodec, Period.ZERO);
-        testCodec(periodCodec, Period.of(
+    private static void testPeriodCodec(Codec<Period> codec) {
+        testCodec(codec, ZERO);
+        testCodec(codec, of(
                 Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE
         ));
-        testCodec(periodCodec, Period.of(1, 6, 15));
+        testCodec(codec, of(1, 6, 15));
+    }
+
+    @Test
+    void testPeriodAsStringCodec() {
+        testPeriodCodec(new PeriodAsStringCodec());
     }
 }

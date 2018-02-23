@@ -32,7 +32,7 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code Instant} values to and from
  * {@code BSON DateTime}.
  * <p>
- * Note it loses the nanoseconds precision.
+ * Note that the nanoseconds precision is lost.
  * <p>
  * This type is <b>immutable</b>.
  */

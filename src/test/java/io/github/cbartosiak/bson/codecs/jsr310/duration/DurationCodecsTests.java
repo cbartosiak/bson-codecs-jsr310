@@ -16,24 +16,41 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.duration;
 
+import static java.lang.Long.MAX_VALUE;
+import static java.time.Duration.ZERO;
+import static java.time.Duration.ofHours;
+import static java.time.Duration.ofSeconds;
+
 import java.time.Duration;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class DurationCodecsTests
         extends AbstractCodecsTests {
 
     private DurationCodecsTests() {}
 
+    private static void testDurationCodec(Codec<Duration> codec) {
+        testCodec(codec, ZERO);
+        testCodec(codec, ofSeconds(MAX_VALUE, 999_999_999L));
+        testCodec(codec, ofHours(12));
+    }
+
+    @Test
+    void testDurationAsStringCodec() {
+        testDurationCodec(new DurationAsStringCodec());
+    }
+
+    @Test
+    void testDurationAsDocumentCodec() {
+        testDurationCodec(new DurationAsDocumentCodec());
+    }
+
     @Test
     void testDurationAsDecimal128Codec() {
-        DurationAsDecimal128Codec durationAsDecimal128Codec =
-                new DurationAsDecimal128Codec();
-        testCodec(durationAsDecimal128Codec, Duration.ZERO);
-        testCodec(durationAsDecimal128Codec, Duration.ofSeconds(
-                Long.MAX_VALUE, 999_999_999L
-        ));
-        testCodec(durationAsDecimal128Codec, Duration.ofHours(12));
+        testDurationCodec(new DurationAsDecimal128Codec());
     }
 }

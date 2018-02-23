@@ -16,28 +16,35 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 
+import static java.time.ZonedDateTime.now;
+import static java.time.ZonedDateTime.of;
+
 import java.time.Year;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class ZonedDateTimeCodecsTests
         extends AbstractCodecsTests {
 
     private ZonedDateTimeCodecsTests() {}
 
-    @Test
-    void testZonedDateTimeAsStringCodec() {
-        ZonedDateTimeAsStringCodec zonedDateTimeAsStringCodec =
-                new ZonedDateTimeAsStringCodec();
-        testCodec(zonedDateTimeAsStringCodec, ZonedDateTime.of(
+    private static void testZonedDateTimeCodec(Codec<ZonedDateTime> codec) {
+        testCodec(codec, of(
                 Year.MIN_VALUE, 1, 1, 0, 0, 0, 0, ZoneOffset.MIN
         ));
-        testCodec(zonedDateTimeAsStringCodec, ZonedDateTime.of(
+        testCodec(codec, of(
                 Year.MAX_VALUE, 12, 31, 23, 59, 59, 999, ZoneOffset.MAX
         ));
-        testCodec(zonedDateTimeAsStringCodec, ZonedDateTime.now());
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testZonedDateTimeAsStringCodec() {
+        testZonedDateTimeCodec(new ZonedDateTimeAsStringCodec());
     }
 }

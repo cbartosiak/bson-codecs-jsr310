@@ -34,10 +34,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code YearMonth} values to and from
- * {@code BSON Decimal128}, such as {@code 2018.01}.
+ * {@code BSON Decimal128}, such as
+ * {@code 2018.01}.
  * <p>
- * Values are stored in {@code %d.%02d} format, where the first part represents
- * a year and the latter a month of this year.
+ * The values are stored using the following format: {@code %d.%02d}
+ * <ul>
+ * <li>the first part represents a year;
+ * <li>the latter part represents a month of this year.
+ * </ul>
  * <p>
  * This type is <b>immutable</b>.
  */

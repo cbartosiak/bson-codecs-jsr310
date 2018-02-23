@@ -34,8 +34,11 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code LocalDate} values to and from
  * {@code BSON DateTime}.
  * <p>
- * Values are stored with the time part representing midnight,
- * the start of this date day and with UTC zone offset.
+ * Note the following implementation details:
+ * <ul>
+ * <li>the time part is considered midnight;
+ * <li>the zone offset part is considered UTC.
+ * </ul>
  * <p>
  * This type is <b>immutable</b>.
  */

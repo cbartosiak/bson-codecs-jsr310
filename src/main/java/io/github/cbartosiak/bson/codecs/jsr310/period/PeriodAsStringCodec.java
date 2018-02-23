@@ -29,10 +29,11 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Period} values to and from
- * {@code BSON String}, such as {@code P6Y3M1D}.
+ * {@code BSON String}, such as
+ * {@code P18Y1M2D}.
  * <p>
- * Values are stored in ISO-8601 period format. A zero period is represented as
- * zero days, {@code P0D}.
+ * The values are stored as {@code ISO-8601} formatted strings
+ * (see {@link Period#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */

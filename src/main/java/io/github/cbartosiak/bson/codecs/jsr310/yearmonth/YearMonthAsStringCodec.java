@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310.offsettime;
+package io.github.cbartosiak.bson.codecs.jsr310.yearmonth;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.OffsetTime;
+import java.time.YearMonth;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,40 +28,42 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code OffsetTime} values to and from
+ * Encodes and decodes {@code YearMonth} values to and from
  * {@code BSON String}, such as
- * {@code 10:15:30+02:00}.
+ * {@code 2018-01}.
  * <p>
- * The values are stored as {@code ISO-8601} formatted strings
- * (see {@link OffsetTime#toString()}).
+ * The values are stored as <i>quasi</i> {@code ISO-8601} formatted strings
+ * (see {@link YearMonth}). Note that the years greater than
+ * {@code 9999} are prefixed with the {@code +} sign.
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class OffsetTimeAsStringCodec
-        implements Codec<OffsetTime> {
+public final class YearMonthAsStringCodec
+        implements Codec<YearMonth> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            OffsetTime value,
+            YearMonth value,
             EncoderContext encoderContext) {
 
-        writer.writeString(value.toString());
+        //noinspection MagicNumber
+        writer.writeString((value.getYear() > 9999 ? "+" : "") + value);
     }
 
     @Override
-    public OffsetTime decode(
+    public YearMonth decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
                 reader::readString,
-                OffsetTime::parse
+                YearMonth::parse
         );
     }
 
     @Override
-    public Class<OffsetTime> getEncoderClass() {
-        return OffsetTime.class;
+    public Class<YearMonth> getEncoderClass() {
+        return YearMonth.class;
     }
 }

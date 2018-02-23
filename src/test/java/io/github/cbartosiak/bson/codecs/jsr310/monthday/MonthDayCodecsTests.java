@@ -16,22 +16,34 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.monthday;
 
+import static java.time.MonthDay.now;
+import static java.time.MonthDay.of;
+
 import java.time.MonthDay;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class MonthDayCodecsTests
         extends AbstractCodecsTests {
 
     private MonthDayCodecsTests() {}
 
+    private static void testMonthDayCodec(Codec<MonthDay> codec) {
+        testCodec(codec, of(1, 1));
+        testCodec(codec, of(12, 31));
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testMonthDayAsStringCodec() {
+        testMonthDayCodec(new MonthDayAsStringCodec());
+    }
+
     @Test
     void testMonthDayAsDecimal128Codec() {
-        MonthDayAsDecimal128Codec monthDayAsDecimal128Codec =
-                new MonthDayAsDecimal128Codec();
-        testCodec(monthDayAsDecimal128Codec, MonthDay.of(1, 1));
-        testCodec(monthDayAsDecimal128Codec, MonthDay.of(12, 31));
-        testCodec(monthDayAsDecimal128Codec, MonthDay.now());
+        testMonthDayCodec(new MonthDayAsDecimal128Codec());
     }
 }

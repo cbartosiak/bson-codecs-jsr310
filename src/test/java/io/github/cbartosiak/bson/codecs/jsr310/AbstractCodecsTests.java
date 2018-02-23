@@ -62,8 +62,7 @@ public abstract class AbstractCodecsTests {
 
             reader.readStartDocument();
 
-            String name = reader.readName();
-            assertEquals("value", name);
+            assertEquals("value", reader.readName());
 
             return codec.decode(reader, DecoderContext.builder().build());
         }

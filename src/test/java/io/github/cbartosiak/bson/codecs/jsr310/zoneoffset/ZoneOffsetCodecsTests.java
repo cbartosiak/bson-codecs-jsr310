@@ -16,22 +16,35 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.zoneoffset;
 
+import static java.time.ZoneOffset.MAX;
+import static java.time.ZoneOffset.MIN;
+import static java.time.ZoneOffset.UTC;
+
 import java.time.ZoneOffset;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class ZoneOffsetCodecsTests
         extends AbstractCodecsTests {
 
     private ZoneOffsetCodecsTests() {}
 
+    private static void testZoneOffsetCodec(Codec<ZoneOffset> codec) {
+        testCodec(codec, MIN);
+        testCodec(codec, MAX);
+        testCodec(codec, UTC);
+    }
+
+    @Test
+    void testZoneOffsetAsStringCodec() {
+        testZoneOffsetCodec(new ZoneOffsetAsStringCodec());
+    }
+
     @Test
     void testZoneOffsetAsInt32Codec() {
-        ZoneOffsetAsInt32Codec zoneOffsetAsInt32Codec =
-                new ZoneOffsetAsInt32Codec();
-        testCodec(zoneOffsetAsInt32Codec, ZoneOffset.MIN);
-        testCodec(zoneOffsetAsInt32Codec, ZoneOffset.MAX);
-        testCodec(zoneOffsetAsInt32Codec, ZoneOffset.UTC);
+        testZoneOffsetCodec(new ZoneOffsetAsInt32Codec());
     }
 }

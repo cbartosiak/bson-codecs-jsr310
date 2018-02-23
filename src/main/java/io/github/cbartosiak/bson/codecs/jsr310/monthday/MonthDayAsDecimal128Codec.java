@@ -34,11 +34,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code MonthDay} values to and from
- * {@code BSON Decimal128}, such as {@code 1.18}.
+ * {@code BSON Decimal128}, such as
+ * {@code 1.02}.
  * <p>
- * Values are stored in {@code %d.%02d} format, where the first part represents
- * a month and the latter a day of this month.
- * <p>
+ * The values are stored using the following format: {@code %d.%02d}
+ * <ul>
+ * <li>the first part represents a month;
+ * <li>the latter part represents a day of this month.
+ * </ul>
  * This type is <b>immutable</b>.
  */
 public final class MonthDayAsDecimal128Codec

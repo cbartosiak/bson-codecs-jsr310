@@ -16,32 +16,61 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
+import static java.time.Instant.EPOCH;
+import static java.time.Instant.MAX;
+import static java.time.Instant.MIN;
+import static java.time.Instant.now;
+import static java.time.Instant.ofEpochSecond;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Instant;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
 import org.bson.BsonInvalidOperationException;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class InstantCodecsTests
         extends AbstractCodecsTests {
 
     private InstantCodecsTests() {}
 
+    private static void testInstantCodec(
+            Codec<Instant> codec,
+            boolean shouldThrow) {
+
+        if (shouldThrow) {
+            assertThrows(
+                    AssertionFailedError.class,
+                    () -> testCodec(codec, ofEpochSecond(10, 100))
+            );
+            assertThrows(
+                    BsonInvalidOperationException.class,
+                    () -> testCodec(codec, MIN)
+            );
+            assertThrows(
+                    BsonInvalidOperationException.class,
+                    () -> testCodec(codec, MAX)
+            );
+        }
+        else {
+            testCodec(codec, ofEpochSecond(10, 100));
+            testCodec(codec, MIN);
+            testCodec(codec, MAX);
+        }
+        testCodec(codec, EPOCH);
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testInstantAsStringCodec() {
+        testInstantCodec(new InstantAsStringCodec(), false);
+    }
+
     @Test
     void testInstantAsDateTimeCodec() {
-        InstantAsDateTimeCodec instantAsDateTimeCodec =
-                new InstantAsDateTimeCodec();
-        assertThrows(
-                BsonInvalidOperationException.class,
-                () -> testCodec(instantAsDateTimeCodec, Instant.MIN)
-        );
-        assertThrows(
-                BsonInvalidOperationException.class,
-                () -> testCodec(instantAsDateTimeCodec, Instant.MAX)
-        );
-        testCodec(instantAsDateTimeCodec, Instant.EPOCH);
-        testCodec(instantAsDateTimeCodec, Instant.now());
+        testInstantCodec(new InstantAsDateTimeCodec(), true);
     }
 }

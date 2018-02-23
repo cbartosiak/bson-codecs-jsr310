@@ -17,10 +17,6 @@
 package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
-import static java.time.Instant.ofEpochMilli;
-import static java.time.LocalDate.ofEpochDay;
-import static java.time.ZoneOffset.UTC;
 
 import java.time.LocalTime;
 
@@ -33,18 +29,15 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code LocalTime} values to and from
- * {@code BSON DateTime}.
+ * {@code BSON String}, such as
+ * {@code 10:15}.
  * <p>
- * Note the following implementation details:
- * <ul>
- * <li>the date part is considered Unix epoch day (1970-01-01);
- * <li>the zone offset part is considered UTC;
- * <li>the nanoseconds precision is lost.
- * </ul>
+ * The values are stored as {@code ISO-8601} formatted strings
+ * (see {@link LocalTime#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalTimeAsDateTimeCodec
+public final class LocalTimeAsStringCodec
         implements Codec<LocalTime> {
 
     @Override
@@ -53,14 +46,7 @@ public final class LocalTimeAsDateTimeCodec
             LocalTime value,
             EncoderContext encoderContext) {
 
-        translateEncodeExceptions(
-                () -> value,
-                val -> writer.writeDateTime(
-                        val.atDate(ofEpochDay(0L))
-                           .toInstant(UTC)
-                           .toEpochMilli()
-                )
-        );
+        writer.writeString(value.toString());
     }
 
     @Override
@@ -69,10 +55,8 @@ public final class LocalTimeAsDateTimeCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                reader::readDateTime,
-                val -> ofEpochMilli(val)
-                        .atOffset(UTC)
-                        .toLocalTime()
+                reader::readString,
+                LocalTime::parse
         );
     }
 

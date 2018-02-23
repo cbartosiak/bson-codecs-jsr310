@@ -16,21 +16,31 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.year;
 
+import static java.time.Year.MAX_VALUE;
+import static java.time.Year.MIN_VALUE;
+import static java.time.Year.now;
+import static java.time.Year.of;
+
 import java.time.Year;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class YearCodecsTests
         extends AbstractCodecsTests {
 
     private YearCodecsTests() {}
 
+    private static void testYearCodec(Codec<Year> codec) {
+        testCodec(codec, of(MIN_VALUE));
+        testCodec(codec, of(MAX_VALUE));
+        testCodec(codec, now());
+    }
+
     @Test
     void testYearAsInt32Codec() {
-        YearAsInt32Codec yearCodec = new YearAsInt32Codec();
-        testCodec(yearCodec, Year.of(Year.MIN_VALUE));
-        testCodec(yearCodec, Year.of(Year.MAX_VALUE));
-        testCodec(yearCodec, Year.now());
+        testYearCodec(new YearAsInt32Codec());
     }
 }

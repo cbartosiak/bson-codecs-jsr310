@@ -16,31 +16,60 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.localdatetime;
 
+import static java.time.LocalDateTime.MAX;
+import static java.time.LocalDateTime.MIN;
+import static java.time.LocalDateTime.now;
+import static java.time.LocalDateTime.ofEpochSecond;
+import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
 import org.bson.BsonInvalidOperationException;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class LocalDateTimeCodecsTests
         extends AbstractCodecsTests {
 
     private LocalDateTimeCodecsTests() {}
 
+    private static void testLocalDateTimeCodec(
+            Codec<LocalDateTime> codec,
+            boolean shouldThrow) {
+
+        if (shouldThrow) {
+            assertThrows(
+                    AssertionFailedError.class,
+                    () -> testCodec(codec, ofEpochSecond(10, 100, UTC))
+            );
+            assertThrows(
+                    BsonInvalidOperationException.class,
+                    () -> testCodec(codec, MIN)
+            );
+            assertThrows(
+                    BsonInvalidOperationException.class,
+                    () -> testCodec(codec, MAX)
+            );
+        }
+        else {
+            testCodec(codec, ofEpochSecond(10, 100, UTC));
+            testCodec(codec, MIN);
+            testCodec(codec, MAX);
+        }
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testLocalDateTimeAsStringCodec() {
+        testLocalDateTimeCodec(new LocalDateTimeAsStringCodec(), false);
+    }
+
     @Test
     void testLocalDateTimeAsDateTimeCodec() {
-        LocalDateTimeAsDateTimeCodec localDateTimeAsDateTimeCodec =
-                new LocalDateTimeAsDateTimeCodec();
-        assertThrows(
-                BsonInvalidOperationException.class,
-                () -> testCodec(localDateTimeAsDateTimeCodec, LocalDateTime.MIN)
-        );
-        assertThrows(
-                BsonInvalidOperationException.class,
-                () -> testCodec(localDateTimeAsDateTimeCodec, LocalDateTime.MAX)
-        );
-        testCodec(localDateTimeAsDateTimeCodec, LocalDateTime.now());
+        testLocalDateTimeCodec(new LocalDateTimeAsDateTimeCodec(), true);
     }
 }

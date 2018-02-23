@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310.offsettime;
+package io.github.cbartosiak.bson.codecs.jsr310.localdatetime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.OffsetTime;
+import java.time.LocalDateTime;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,40 +28,40 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code OffsetTime} values to and from
+ * Encodes and decodes {@code LocalDateTime} values to and from
  * {@code BSON String}, such as
- * {@code 10:15:30+02:00}.
+ * {@code 2018-01-02T10:15:30}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
- * (see {@link OffsetTime#toString()}).
+ * (see {@link LocalDateTime#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class OffsetTimeAsStringCodec
-        implements Codec<OffsetTime> {
+public final class LocalDateTimeAsStringCodec
+        implements Codec<LocalDateTime> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            OffsetTime value,
+            LocalDateTime value,
             EncoderContext encoderContext) {
 
         writer.writeString(value.toString());
     }
 
     @Override
-    public OffsetTime decode(
+    public LocalDateTime decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
                 reader::readString,
-                OffsetTime::parse
+                LocalDateTime::parse
         );
     }
 
     @Override
-    public Class<OffsetTime> getEncoderClass() {
-        return OffsetTime.class;
+    public Class<LocalDateTime> getEncoderClass() {
+        return LocalDateTime.class;
     }
 }

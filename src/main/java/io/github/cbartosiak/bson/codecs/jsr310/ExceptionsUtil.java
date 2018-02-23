@@ -64,13 +64,9 @@ public final class ExceptionsUtil {
                 ArithmeticException |
                 DateTimeException ex) {
 
-            throw new BsonInvalidOperationException(
-                    format(
-                            "The value %s is not supported",
-                            value
-                    ),
-                    ex
-            );
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", value
+            ), ex);
         }
     }
 
@@ -104,13 +100,9 @@ public final class ExceptionsUtil {
         catch (ArithmeticException |
                 DateTimeException ex) {
 
-            throw new BsonInvalidOperationException(
-                    format(
-                            "The value %s is not supported",
-                            value
-                    ),
-                    ex
-            );
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", value
+            ), ex);
         }
     }
 }

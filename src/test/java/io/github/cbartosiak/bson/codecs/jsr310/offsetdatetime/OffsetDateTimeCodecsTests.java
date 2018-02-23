@@ -16,22 +16,30 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.offsetdatetime;
 
+import static java.time.OffsetDateTime.MAX;
+import static java.time.OffsetDateTime.MIN;
+import static java.time.OffsetDateTime.now;
+
 import java.time.OffsetDateTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class OffsetDateTimeCodecsTests
         extends AbstractCodecsTests {
 
     private OffsetDateTimeCodecsTests() {}
 
+    private static void testOffsetDateTimeCodec(Codec<OffsetDateTime> codec) {
+        testCodec(codec, MIN);
+        testCodec(codec, MAX);
+        testCodec(codec, now());
+    }
+
     @Test
     void testOffsetDateTimeAsStringCodec() {
-        OffsetDateTimeAsStringCodec offsetDateTimeAsStringCodec =
-                new OffsetDateTimeAsStringCodec();
-        testCodec(offsetDateTimeAsStringCodec, OffsetDateTime.MIN);
-        testCodec(offsetDateTimeAsStringCodec, OffsetDateTime.MAX);
-        testCodec(offsetDateTimeAsStringCodec, OffsetDateTime.now());
+        testOffsetDateTimeCodec(new OffsetDateTimeAsStringCodec());
     }
 }

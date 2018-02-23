@@ -16,24 +16,54 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 
+import static java.time.LocalTime.MAX;
+import static java.time.LocalTime.MIDNIGHT;
+import static java.time.LocalTime.MIN;
+import static java.time.LocalTime.NOON;
+import static java.time.LocalTime.now;
+import static java.time.LocalTime.ofNanoOfDay;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.time.LocalTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class LocalTimeCodecsTests
         extends AbstractCodecsTests {
 
     private LocalTimeCodecsTests() {}
 
+    private static void testLocalTimeCodec(
+            Codec<LocalTime> codec,
+            boolean shouldThrow) {
+
+        if (shouldThrow) {
+            assertThrows(
+                    AssertionFailedError.class,
+                    () -> testCodec(codec, ofNanoOfDay(10000000100L))
+            );
+        }
+        else {
+            testCodec(codec, ofNanoOfDay(10000000100L));
+        }
+        testCodec(codec, MIN);
+        testCodec(codec, MAX.minusNanos(999999));
+        testCodec(codec, MIDNIGHT);
+        testCodec(codec, NOON);
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testLocalTimeAsStringCodec() {
+        testLocalTimeCodec(new LocalTimeAsStringCodec(), false);
+    }
+
     @Test
     void testLocalTimeAsDateTimeCodec() {
-        LocalTimeAsDateTimeCodec localTimeAsDateTimeCodec =
-                new LocalTimeAsDateTimeCodec();
-        testCodec(localTimeAsDateTimeCodec, LocalTime.MIN);
-        testCodec(localTimeAsDateTimeCodec, LocalTime.MAX.minusNanos(999999));
-        testCodec(localTimeAsDateTimeCodec, LocalTime.MIDNIGHT);
-        testCodec(localTimeAsDateTimeCodec, LocalTime.NOON);
-        testCodec(localTimeAsDateTimeCodec, LocalTime.now());
+        testLocalTimeCodec(new LocalTimeAsDateTimeCodec(), true);
     }
 }

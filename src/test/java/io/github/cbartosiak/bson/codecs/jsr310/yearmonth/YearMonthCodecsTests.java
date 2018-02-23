@@ -16,23 +16,35 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.yearmonth;
 
+import static java.time.YearMonth.now;
+import static java.time.YearMonth.of;
+
 import java.time.Year;
 import java.time.YearMonth;
 
 import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("JUnitTestMethodWithNoAssertions")
 final class YearMonthCodecsTests
         extends AbstractCodecsTests {
 
     private YearMonthCodecsTests() {}
 
+    private static void testYearMonthCodec(Codec<YearMonth> codec) {
+        testCodec(codec, of(Year.MIN_VALUE, 1));
+        testCodec(codec, of(Year.MAX_VALUE, 12));
+        testCodec(codec, now());
+    }
+
+    @Test
+    void testYearMonthAsStringCodec() {
+        testYearMonthCodec(new YearMonthAsStringCodec());
+    }
+
     @Test
     void testYearMonthAsDecimal128Codec() {
-        YearMonthAsDecimal128Codec yearMonthAsDecimal128Codec =
-                new YearMonthAsDecimal128Codec();
-        testCodec(yearMonthAsDecimal128Codec, YearMonth.of(Year.MIN_VALUE, 1));
-        testCodec(yearMonthAsDecimal128Codec, YearMonth.of(Year.MAX_VALUE, 12));
-        testCodec(yearMonthAsDecimal128Codec, YearMonth.now());
+        testYearMonthCodec(new YearMonthAsDecimal128Codec());
     }
 }

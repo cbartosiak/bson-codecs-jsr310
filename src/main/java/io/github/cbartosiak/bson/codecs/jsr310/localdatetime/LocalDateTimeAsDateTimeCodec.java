@@ -34,9 +34,11 @@ import org.bson.codecs.EncoderContext;
  * Encodes and decodes {@code LocalDateTime} values to and from
  * {@code BSON DateTime}.
  * <p>
- * Values are stored with UTC zone offset.
- * <p>
- * Note it loses the nanoseconds precision.
+ * Note the following implementation details:
+ * <ul>
+ * <li>the zone offset part is considered UTC;
+ * <li>the nanoseconds precision is lost.
+ * </ul>
  * <p>
  * This type is <b>immutable</b>.
  */

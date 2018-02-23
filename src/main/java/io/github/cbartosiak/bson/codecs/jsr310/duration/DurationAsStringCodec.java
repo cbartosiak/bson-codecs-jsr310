@@ -17,12 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.duration;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
-import static java.lang.String.format;
-import static java.time.Duration.ofSeconds;
-import static org.bson.types.Decimal128.parse;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 
 import org.bson.BsonReader;
@@ -34,18 +29,15 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Duration} values to and from
- * {@code BSON Decimal128}, such as
- * {@code 10.100000000}.
+ * {@code BSON String}, such as
+ * {@code PT10.100S}.
  * <p>
- * The values are stored using the following format: {@code %d.%09d}
- * <ul>
- * <li>the first part represents seconds;
- * <li>the latter part represents nanoseconds.
- * </ul>
+ * The values are stored as {@code ISO-8601} formatted strings
+ * (see {@link Duration#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class DurationAsDecimal128Codec
+public final class DurationAsStringCodec
         implements Codec<Duration> {
 
     @Override
@@ -54,14 +46,7 @@ public final class DurationAsDecimal128Codec
             Duration value,
             EncoderContext encoderContext) {
 
-        translateEncodeExceptions(
-                () -> value,
-                val -> writer.writeDecimal128(parse(format(
-                        "%d.%09d",
-                        val.getSeconds(),
-                        val.getNano()
-                )))
-        );
+        writer.writeString(value.toString());
     }
 
     @Override
@@ -69,18 +54,9 @@ public final class DurationAsDecimal128Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        //noinspection OverlyLongLambda
         return translateDecodeExceptions(
-                reader::readDecimal128,
-                val -> {
-                    BigDecimal bigDecimal = val.bigDecimalValue();
-                    long seconds = bigDecimal.longValue();
-                    int nanos = bigDecimal.subtract(new BigDecimal(seconds))
-                                          .scaleByPowerOfTen(9)
-                                          .abs()
-                                          .intValue();
-                    return ofSeconds(seconds, nanos);
-                }
+                reader::readString,
+                Duration::parse
         );
     }
 

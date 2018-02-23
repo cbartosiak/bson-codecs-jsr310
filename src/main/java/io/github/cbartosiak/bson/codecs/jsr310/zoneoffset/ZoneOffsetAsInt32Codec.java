@@ -29,9 +29,11 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code ZoneOffset} values to and from
- * {@code BSON Int32}.
+ * {@code BSON Int32}, such as
+ * {@code 7200}.
  * <p>
- * Values are stored as total zone offset amounts in seconds.
+ * The values are stored as total zone offset amounts in seconds
+ * (see {@link ZoneOffset#getTotalSeconds()}).
  * <p>
  * This type is <b>immutable</b>.
  */
