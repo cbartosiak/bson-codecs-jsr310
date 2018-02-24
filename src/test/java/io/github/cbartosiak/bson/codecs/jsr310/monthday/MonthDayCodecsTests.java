@@ -43,6 +43,11 @@ final class MonthDayCodecsTests
     }
 
     @Test
+    void testMonthDayAsDocumentCodec() {
+        testMonthDayCodec(new MonthDayAsDocumentCodec());
+    }
+
+    @Test
     void testMonthDayAsDecimal128Codec() {
         testMonthDayCodec(new MonthDayAsDecimal128Codec());
     }

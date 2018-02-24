@@ -61,6 +61,11 @@ final class LocalDateCodecsTests
     }
 
     @Test
+    void testLocalDateAsDocumentCodec() {
+        testLocalDateCodec(new LocalDateAsDocumentCodec(), false);
+    }
+
+    @Test
     void testLocalDateAsDateTimeCodec() {
         testLocalDateCodec(new LocalDateAsDateTimeCodec(), true);
     }

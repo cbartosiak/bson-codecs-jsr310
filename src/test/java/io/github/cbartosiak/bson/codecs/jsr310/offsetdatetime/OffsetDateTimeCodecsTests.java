@@ -42,4 +42,9 @@ final class OffsetDateTimeCodecsTests
     void testOffsetDateTimeAsStringCodec() {
         testOffsetDateTimeCodec(new OffsetDateTimeAsStringCodec());
     }
+
+    @Test
+    void testOffsetDateTimeAsDocumentCodec() {
+        testOffsetDateTimeCodec(new OffsetDateTimeAsDocumentCodec());
+    }
 }

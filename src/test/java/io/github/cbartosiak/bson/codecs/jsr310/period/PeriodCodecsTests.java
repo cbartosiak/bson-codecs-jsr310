@@ -43,4 +43,9 @@ final class PeriodCodecsTests
     void testPeriodAsStringCodec() {
         testPeriodCodec(new PeriodAsStringCodec());
     }
+
+    @Test
+    void testPeriodAsDocumentCodec() {
+        testPeriodCodec(new PeriodAsDocumentCodec());
+    }
 }

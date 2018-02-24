@@ -30,7 +30,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code LocalTime} values to and from
  * {@code BSON String}, such as
- * {@code 10:15}.
+ * {@code 10:15:30}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
  * (see {@link LocalTime#toString()}).

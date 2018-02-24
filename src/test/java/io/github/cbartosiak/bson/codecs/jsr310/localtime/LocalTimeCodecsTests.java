@@ -63,7 +63,17 @@ final class LocalTimeCodecsTests
     }
 
     @Test
+    void testLocalTimeAsDocumentCodec() {
+        testLocalTimeCodec(new LocalTimeAsDocumentCodec(), false);
+    }
+
+    @Test
     void testLocalTimeAsDateTimeCodec() {
         testLocalTimeCodec(new LocalTimeAsDateTimeCodec(), true);
+    }
+
+    @Test
+    void testLocalTimeAsInt64Codec() {
+        testLocalTimeCodec(new LocalTimeAsInt64Codec(), false);
     }
 }

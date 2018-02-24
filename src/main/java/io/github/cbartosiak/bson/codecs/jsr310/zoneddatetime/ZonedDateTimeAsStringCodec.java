@@ -30,7 +30,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * Encodes and decodes {@code ZonedDateTime} values to and from
  * {@code BSON String}, such as
- * {@code 2018-01-02T10:15:30+02:00[Europe/Warsaw]}.
+ * {@code 2018-01-02T10:15:30+01:00[CET]}.
  * <p>
  * The values are stored as <i>quasi</i> {@code ISO-8601} formatted strings
  * (see {@link ZonedDateTime#toString()}).

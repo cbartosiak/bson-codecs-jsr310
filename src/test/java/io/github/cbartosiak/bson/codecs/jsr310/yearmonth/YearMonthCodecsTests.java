@@ -44,6 +44,11 @@ final class YearMonthCodecsTests
     }
 
     @Test
+    void testYearMonthAsDocumentCodec() {
+        testYearMonthCodec(new YearMonthAsDocumentCodec());
+    }
+
+    @Test
     void testYearMonthAsDecimal128Codec() {
         testYearMonthCodec(new YearMonthAsDecimal128Codec());
     }

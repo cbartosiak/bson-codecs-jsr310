@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310.zoneoffset;
+package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
 
-import java.time.ZoneOffset;
+import java.time.LocalTime;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -28,40 +28,40 @@ import org.bson.codecs.EncoderContext;
 
 /**
  * <p>
- * Encodes and decodes {@code ZoneOffset} values to and from
- * {@code BSON String}, such as
- * {@code +01:00}.
+ * Encodes and decodes {@code LocalTime} values to and from
+ * {@code BSON Int64}, such as
+ * {@code 36930000000000}.
  * <p>
- * The values are stored as normalized IDs
- * (see {@link ZoneOffset#of(String)}).
+ * The values are stored as nanoseconds of a day
+ * (see {@link LocalTime#toNanoOfDay()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class ZoneOffsetAsStringCodec
-        implements Codec<ZoneOffset> {
+public final class LocalTimeAsInt64Codec
+        implements Codec<LocalTime> {
 
     @Override
     public void encode(
             BsonWriter writer,
-            ZoneOffset value,
+            LocalTime value,
             EncoderContext encoderContext) {
 
-        writer.writeString(value.toString());
+        writer.writeInt64(value.toNanoOfDay());
     }
 
     @Override
-    public ZoneOffset decode(
+    public LocalTime decode(
             BsonReader reader,
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                reader::readString,
-                ZoneOffset::of
+                reader::readInt64,
+                LocalTime::ofNanoOfDay
         );
     }
 
     @Override
-    public Class<ZoneOffset> getEncoderClass() {
-        return ZoneOffset.class;
+    public Class<LocalTime> getEncoderClass() {
+        return LocalTime.class;
     }
 }

@@ -70,6 +70,11 @@ final class InstantCodecsTests
     }
 
     @Test
+    void testInstantAsDocumentCodec() {
+        testInstantCodec(new InstantAsDocumentCodec(), false);
+    }
+
+    @Test
     void testInstantAsDateTimeCodec() {
         testInstantCodec(new InstantAsDateTimeCodec(), true);
     }
