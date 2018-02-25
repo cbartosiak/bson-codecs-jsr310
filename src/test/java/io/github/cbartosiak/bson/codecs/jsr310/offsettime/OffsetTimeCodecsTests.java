@@ -22,7 +22,7 @@ import static java.time.OffsetTime.now;
 
 import java.time.OffsetTime;
 
-import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 

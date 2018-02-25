@@ -16,10 +16,10 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.DocumentCodecsUtil.getFieldValue;
-import static io.github.cbartosiak.bson.codecs.jsr310.DocumentCodecsUtil.readDocument;
-import static io.github.cbartosiak.bson.codecs.jsr310.DocumentCodecsUtil.writeDocument;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.getFieldValue;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.readDocument;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.writeDocument;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
 import static java.time.ZonedDateTime.ofStrict;
 
 import java.time.ZoneId;

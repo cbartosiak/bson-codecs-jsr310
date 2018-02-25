@@ -16,8 +16,8 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.duration;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
 import static java.time.Duration.ofSeconds;
 import static org.bson.types.Decimal128.parse;

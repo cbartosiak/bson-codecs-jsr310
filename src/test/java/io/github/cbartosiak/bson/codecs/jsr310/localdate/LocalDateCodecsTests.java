@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
-import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.BsonInvalidOperationException;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;

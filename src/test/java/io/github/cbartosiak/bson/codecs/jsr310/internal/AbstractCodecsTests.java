@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.internal;
 
 import static java.nio.ByteBuffer.wrap;
 import static org.junit.jupiter.api.Assertions.assertEquals;

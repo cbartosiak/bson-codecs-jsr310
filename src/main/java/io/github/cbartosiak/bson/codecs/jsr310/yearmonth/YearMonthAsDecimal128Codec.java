@@ -16,8 +16,8 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.yearmonth;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateEncodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
 import static java.time.YearMonth.of;
 import static org.bson.types.Decimal128.parse;

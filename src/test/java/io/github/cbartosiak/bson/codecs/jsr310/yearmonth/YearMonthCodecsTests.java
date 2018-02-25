@@ -22,7 +22,7 @@ import static java.time.YearMonth.of;
 import java.time.Year;
 import java.time.YearMonth;
 
-import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 

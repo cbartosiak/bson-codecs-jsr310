@@ -21,7 +21,7 @@ import static java.time.Period.of;
 
 import java.time.Period;
 
-import io.github.cbartosiak.bson.codecs.jsr310.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 

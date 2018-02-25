@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains core commons.
+ * Contains <b>internal</b> commons, i.e. not being a part of the public API.
  */
-package io.github.cbartosiak.bson.codecs.jsr310;
+package io.github.cbartosiak.bson.codecs.jsr310.internal;

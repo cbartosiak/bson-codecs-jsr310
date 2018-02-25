@@ -16,7 +16,7 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.offsetdatetime;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
 
 import java.time.OffsetDateTime;
 
