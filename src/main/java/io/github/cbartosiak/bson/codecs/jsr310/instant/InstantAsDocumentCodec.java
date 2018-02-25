@@ -19,14 +19,12 @@ package io.github.cbartosiak.bson.codecs.jsr310.instant;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.Instant.ofEpochSecond;
 
 import java.time.Instant;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -54,13 +52,10 @@ public final class InstantAsDocumentCodec
             Instant value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append("seconds", value.getEpochSecond())
-                        .append("nanos", value.getNano()),
-                encoderContext
-        );
+        writer.writeStartDocument();
+        writer.writeInt64("seconds", value.getEpochSecond());
+        writer.writeInt32("nanos", value.getNano());
+        writer.writeEndDocument();
     }
 
     @Override

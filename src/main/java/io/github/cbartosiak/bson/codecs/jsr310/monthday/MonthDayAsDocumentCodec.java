@@ -19,14 +19,12 @@ package io.github.cbartosiak.bson.codecs.jsr310.monthday;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.MonthDay.of;
 
 import java.time.MonthDay;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -54,13 +52,10 @@ public final class MonthDayAsDocumentCodec
             MonthDay value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append("month", value.getMonthValue())
-                        .append("day", value.getDayOfMonth()),
-                encoderContext
-        );
+        writer.writeStartDocument();
+        writer.writeInt32("month", value.getMonthValue());
+        writer.writeInt32("day", value.getDayOfMonth());
+        writer.writeEndDocument();
     }
 
     @Override

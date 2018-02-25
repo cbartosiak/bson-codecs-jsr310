@@ -19,7 +19,6 @@ package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.LocalTime.of;
 
 import java.time.LocalTime;
@@ -51,21 +50,6 @@ public final class LocalTimeAsDocumentCodec
         implements Codec<LocalTime> {
 
     /**
-     * Converts the local time to a document.
-     *
-     * @param localTime not null
-     *
-     * @return a non-null {@code Document}
-     */
-    public static Document toDocument(LocalTime localTime) {
-        return new Document()
-                .append("hour", localTime.getHour())
-                .append("minute", localTime.getMinute())
-                .append("second", localTime.getSecond())
-                .append("nano", localTime.getNano());
-    }
-
-    /**
      * Converts the document to a local time.
      *
      * @param document not null
@@ -87,7 +71,12 @@ public final class LocalTimeAsDocumentCodec
             LocalTime value,
             EncoderContext encoderContext) {
 
-        writeDocument(writer, toDocument(value), encoderContext);
+        writer.writeStartDocument();
+        writer.writeInt32("hour", value.getHour());
+        writer.writeInt32("minute", value.getMinute());
+        writer.writeInt32("second", value.getSecond());
+        writer.writeInt32("nano", value.getNano());
+        writer.writeEndDocument();
     }
 
     @Override

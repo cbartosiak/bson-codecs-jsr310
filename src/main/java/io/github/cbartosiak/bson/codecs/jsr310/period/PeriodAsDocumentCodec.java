@@ -19,14 +19,12 @@ package io.github.cbartosiak.bson.codecs.jsr310.period;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.Period.of;
 
 import java.time.Period;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -55,14 +53,11 @@ public final class PeriodAsDocumentCodec
             Period value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append("years", value.getYears())
-                        .append("months", value.getMonths())
-                        .append("days", value.getDays()),
-                encoderContext
-        );
+        writer.writeStartDocument();
+        writer.writeInt32("years", value.getYears());
+        writer.writeInt32("months", value.getMonths());
+        writer.writeInt32("days", value.getDays());
+        writer.writeEndDocument();
     }
 
     @Override

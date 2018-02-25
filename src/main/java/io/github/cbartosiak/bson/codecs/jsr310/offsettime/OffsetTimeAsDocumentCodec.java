@@ -19,9 +19,9 @@ package io.github.cbartosiak.bson.codecs.jsr310.offsettime;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.OffsetTime.of;
 
+import java.time.LocalTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 
@@ -61,24 +61,20 @@ import org.bson.codecs.EncoderContext;
 public final class OffsetTimeAsDocumentCodec
         implements Codec<OffsetTime> {
 
+    private final Codec<LocalTime> localTimeCodec =
+            new LocalTimeAsDocumentCodec();
+
     @Override
     public void encode(
             BsonWriter writer,
             OffsetTime value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append(
-                                "time",
-                                LocalTimeAsDocumentCodec.toDocument(
-                                        value.toLocalTime()
-                                )
-                        )
-                        .append("offset", value.getOffset().getTotalSeconds()),
-                encoderContext
-        );
+        writer.writeStartDocument();
+        writer.writeName("time");
+        localTimeCodec.encode(writer, value.toLocalTime(), encoderContext);
+        writer.writeInt32("offset", value.getOffset().getTotalSeconds());
+        writer.writeEndDocument();
     }
 
     @Override

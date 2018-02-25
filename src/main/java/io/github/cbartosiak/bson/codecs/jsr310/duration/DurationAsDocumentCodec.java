@@ -19,14 +19,12 @@ package io.github.cbartosiak.bson.codecs.jsr310.duration;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.Duration.ofSeconds;
 
 import java.time.Duration;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -54,13 +52,10 @@ public final class DurationAsDocumentCodec
             Duration value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append("seconds", value.getSeconds())
-                        .append("nanos", value.getNano()),
-                encoderContext
-        );
+        writer.writeStartDocument();
+        writer.writeInt64("seconds", value.getSeconds());
+        writer.writeInt32("nanos", value.getNano());
+        writer.writeEndDocument();
     }
 
     @Override

@@ -19,10 +19,11 @@ package io.github.cbartosiak.bson.codecs.jsr310.localdatetime;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.LocalDateTime.of;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDocumentCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
@@ -66,22 +67,11 @@ import org.bson.codecs.EncoderContext;
 public final class LocalDateTimeAsDocumentCodec
         implements Codec<LocalDateTime> {
 
-    /**
-     * Converts the local date time to a document.
-     *
-     * @param localDateTime not null
-     *
-     * @return a non-null {@code Document}
-     */
-    public static Document toDocument(LocalDateTime localDateTime) {
-        return new Document()
-                .append("date", LocalDateAsDocumentCodec.toDocument(
-                        localDateTime.toLocalDate()
-                ))
-                .append("time", LocalTimeAsDocumentCodec.toDocument(
-                        localDateTime.toLocalTime()
-                ));
-    }
+    private final Codec<LocalDate> localDateCodec =
+            new LocalDateAsDocumentCodec();
+
+    private final Codec<LocalTime> localTimeCodec =
+            new LocalTimeAsDocumentCodec();
 
     /**
      * Converts the document to a local date time.
@@ -107,7 +97,12 @@ public final class LocalDateTimeAsDocumentCodec
             LocalDateTime value,
             EncoderContext encoderContext) {
 
-        writeDocument(writer, toDocument(value), encoderContext);
+        writer.writeStartDocument();
+        writer.writeName("date");
+        localDateCodec.encode(writer, value.toLocalDate(), encoderContext);
+        writer.writeName("time");
+        localTimeCodec.encode(writer, value.toLocalTime(), encoderContext);
+        writer.writeEndDocument();
     }
 
     @Override

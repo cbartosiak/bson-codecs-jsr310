@@ -19,9 +19,9 @@ package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.ZonedDateTime.ofStrict;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -76,25 +76,23 @@ import org.bson.codecs.EncoderContext;
 public final class ZonedDateTimeAsDocumentCodec
         implements Codec<ZonedDateTime> {
 
+    private final Codec<LocalDateTime> localDateTimeCodec =
+            new LocalDateTimeAsDocumentCodec();
+
     @Override
     public void encode(
             BsonWriter writer,
             ZonedDateTime value,
             EncoderContext encoderContext) {
 
-        writeDocument(
-                writer,
-                new Document()
-                        .append(
-                                "dateTime",
-                                LocalDateTimeAsDocumentCodec.toDocument(
-                                        value.toLocalDateTime()
-                                )
-                        )
-                        .append("offset", value.getOffset().getTotalSeconds())
-                        .append("zone", value.getZone().getId()),
-                encoderContext
+        writer.writeStartDocument();
+        writer.writeName("dateTime");
+        localDateTimeCodec.encode(
+                writer, value.toLocalDateTime(), encoderContext
         );
+        writer.writeInt32("offset", value.getOffset().getTotalSeconds());
+        writer.writeString("zone", value.getZone().getId());
+        writer.writeEndDocument();
     }
 
     @Override

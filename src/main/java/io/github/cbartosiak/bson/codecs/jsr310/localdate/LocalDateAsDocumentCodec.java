@@ -19,7 +19,6 @@ package io.github.cbartosiak.bson.codecs.jsr310.localdate;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.LocalDate.of;
 
 import java.time.LocalDate;
@@ -50,20 +49,6 @@ public final class LocalDateAsDocumentCodec
         implements Codec<LocalDate> {
 
     /**
-     * Converts the local date to a document.
-     *
-     * @param localDate not null
-     *
-     * @return a non-null {@code Document}
-     */
-    public static Document toDocument(LocalDate localDate) {
-        return new Document()
-                .append("year", localDate.getYear())
-                .append("month", localDate.getMonthValue())
-                .append("day", localDate.getDayOfMonth());
-    }
-
-    /**
      * Converts the document to a local date.
      *
      * @param document not null
@@ -84,7 +69,11 @@ public final class LocalDateAsDocumentCodec
             LocalDate value,
             EncoderContext encoderContext) {
 
-        writeDocument(writer, toDocument(value), encoderContext);
+        writer.writeStartDocument();
+        writer.writeInt32("year", value.getYear());
+        writer.writeInt32("month", value.getMonthValue());
+        writer.writeInt32("day", value.getDayOfMonth());
+        writer.writeEndDocument();
     }
 
     @Override
