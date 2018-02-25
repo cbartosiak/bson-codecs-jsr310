@@ -34,7 +34,7 @@ import org.bson.codecs.EncoderContext;
  * {@code +01:00} (offset based IDs).
  * <p>
  * The values are stored as IDs
- * (see {@link ZoneId#of(String)}).
+ * (see {@link ZoneId#getId()}).
  * <p>
  * This type is <b>immutable</b>.
  */
@@ -47,7 +47,7 @@ public final class ZoneIdAsStringCodec
             ZoneId value,
             EncoderContext encoderContext) {
 
-        writer.writeString(value.toString());
+        writer.writeString(value.getId());
     }
 
     @Override

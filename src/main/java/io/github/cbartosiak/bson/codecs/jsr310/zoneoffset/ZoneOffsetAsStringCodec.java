@@ -33,7 +33,7 @@ import org.bson.codecs.EncoderContext;
  * {@code +01:00}.
  * <p>
  * The values are stored as normalized IDs
- * (see {@link ZoneOffset#of(String)}).
+ * (see {@link ZoneOffset#getId()}).
  * <p>
  * This type is <b>immutable</b>.
  */
@@ -46,7 +46,7 @@ public final class ZoneOffsetAsStringCodec
             ZoneOffset value,
             EncoderContext encoderContext) {
 
-        writer.writeString(value.toString());
+        writer.writeString(value.getId());
     }
 
     @Override
