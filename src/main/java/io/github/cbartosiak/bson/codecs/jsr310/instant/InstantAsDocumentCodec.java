@@ -16,10 +16,10 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.getFieldValue;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.readDocument;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.DocumentCodecsUtil.writeDocument;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFieldValue;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.writeDocument;
 import static java.time.Instant.ofEpochSecond;
 
 import java.time.Instant;

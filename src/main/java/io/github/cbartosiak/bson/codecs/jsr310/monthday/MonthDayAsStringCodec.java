@@ -16,7 +16,7 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.monthday;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 
 import java.time.MonthDay;
 

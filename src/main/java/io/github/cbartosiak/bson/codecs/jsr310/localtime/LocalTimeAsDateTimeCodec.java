@@ -16,8 +16,8 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateEncodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDate.ofEpochDay;
 import static java.time.ZoneOffset.UTC;

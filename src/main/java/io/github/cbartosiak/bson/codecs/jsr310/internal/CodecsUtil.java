@@ -18,6 +18,11 @@ package io.github.cbartosiak.bson.codecs.jsr310.internal;
 
 import static java.lang.String.format;
 
+import java.time.DateTimeException;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
@@ -26,11 +31,50 @@ import org.bson.codecs.DecoderContext;
 import org.bson.codecs.DocumentCodec;
 import org.bson.codecs.EncoderContext;
 
-public final class DocumentCodecsUtil {
+public final class CodecsUtil {
 
     private static final DocumentCodec DOCUMENT_CODEC = new DocumentCodec();
 
-    private DocumentCodecsUtil() {}
+    private CodecsUtil() {}
+
+    // Exceptions
+
+    public static <Value> void translateEncodeExceptions(
+            Supplier<Value> valueSupplier,
+            Consumer<Value> valueConsumer) {
+
+        Value value = valueSupplier.get();
+        try {
+            valueConsumer.accept(value);
+        }
+        catch (NumberFormatException |
+                ArithmeticException |
+                DateTimeException ex) {
+
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", value
+            ), ex);
+        }
+    }
+
+    public static <Value, Result> Result translateDecodeExceptions(
+            Supplier<Value> valueSupplier,
+            Function<Value, Result> valueConverter) {
+
+        Value value = valueSupplier.get();
+        try {
+            return valueConverter.apply(value);
+        }
+        catch (ArithmeticException |
+                DateTimeException ex) {
+
+            throw new BsonInvalidOperationException(format(
+                    "The value %s is not supported", value
+            ), ex);
+        }
+    }
+
+    // Document codecs
 
     public static void writeDocument(
             BsonWriter writer,

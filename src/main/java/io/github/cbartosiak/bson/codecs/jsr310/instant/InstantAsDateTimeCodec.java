@@ -16,8 +16,8 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateDecodeExceptions;
-import static io.github.cbartosiak.bson.codecs.jsr310.internal.ExceptionsUtil.translateEncodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
 
 import java.time.Instant;
 
