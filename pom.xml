@@ -238,6 +238,11 @@
                             <additionalOptions>
                                 -Xdoclint:none
                             </additionalOptions>
+                            <links>
+                                <link>
+                                    http://mongodb.github.io/mongo-java-driver/3.6/javadoc
+                                </link>
+                            </links>
                         </configuration>
                         <executions>
                             <execution>

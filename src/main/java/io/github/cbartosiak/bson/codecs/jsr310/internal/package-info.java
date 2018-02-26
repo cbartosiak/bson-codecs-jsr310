@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains <b>internal</b> commons, i.e. not being a part of the public API.
+ * Contains <b>internal</b> commons (not being a part of the public API).
  */
 package io.github.cbartosiak.bson.codecs.jsr310.internal;
