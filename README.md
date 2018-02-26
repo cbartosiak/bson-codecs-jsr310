@@ -57,6 +57,7 @@ There are three main factors to consider when choosing codecs:
 
 The table below presents the recommendations for all the factors. The more **+**
 signs a cell contains the better a row codec is in terms of a column factor:
+
 | Codec                           | Queryability | Sortability | Readability |
 | :----                           | :----------: | :---------: | :---------: |
 | `DayOfWeekAsInt32Codec`         | ++           | ++          | +           |
