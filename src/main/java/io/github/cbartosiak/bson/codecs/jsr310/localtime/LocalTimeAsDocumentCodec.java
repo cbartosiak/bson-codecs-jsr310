@@ -20,13 +20,16 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalTime.of;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -49,20 +52,15 @@ import org.bson.codecs.EncoderContext;
 public final class LocalTimeAsDocumentCodec
         implements Codec<LocalTime> {
 
-    /**
-     * Converts the document to a local time.
-     *
-     * @param document not null
-     *
-     * @return a non-null {@code LocalTime}
-     */
-    public static LocalTime fromDocument(Document document) {
-        return of(
-                getFieldValue(document, "hour", Integer.class),
-                getFieldValue(document, "minute", Integer.class),
-                getFieldValue(document, "second", Integer.class),
-                getFieldValue(document, "nano", Integer.class)
-        );
+    private static final Map<String, Decoder<?>> FIELD_DECODERS;
+
+    static {
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("hour", (r, dc) -> r.readInt32());
+        fd.put("minute", (r, dc) -> r.readInt32());
+        fd.put("second", (r, dc) -> r.readInt32());
+        fd.put("nano", (r, dc) -> r.readInt32());
+        FIELD_DECODERS = unmodifiableMap(fd);
     }
 
     @Override
@@ -85,8 +83,13 @@ public final class LocalTimeAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
-                LocalTimeAsDocumentCodec::fromDocument
+                () -> readDocument(reader, decoderContext, FIELD_DECODERS),
+                val -> of(
+                        getFieldValue(val, "hour", Integer.class),
+                        getFieldValue(val, "minute", Integer.class),
+                        getFieldValue(val, "second", Integer.class),
+                        getFieldValue(val, "nano", Integer.class)
+                )
         );
     }
 

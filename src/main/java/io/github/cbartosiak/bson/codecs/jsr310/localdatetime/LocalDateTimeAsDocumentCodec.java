@@ -20,17 +20,20 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalDateTime.of;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDocumentCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -40,55 +43,57 @@ import org.bson.codecs.EncoderContext;
  * {@code BSON Document}, such as:
  * <pre>
  * {
- *     date: { year: 2018, month: 1, day: 2 },
- *     time: { hour: 10, minute: 15, second: 30, nano: 0 }
+ *     date: ...,
+ *     time: ...
  * }
  * </pre>
  * <p>
  * The values are stored using the following structure:
  * <ul>
- * <li>{@code date} (a non-null {@code Document}):
- * <ul>
- * <li>{@code year} (a non-null {@code Int32});
- * <li>{@code month} (a non-null {@code Int32});
- * <li>{@code day} (a non-null {@code Int32});
+ * <li>{@code date} (a non-null value);
+ * <li>{@code time} (a non-null value).
  * </ul>
- * <li>{@code time} (a non-null {@code Document}):
- * <ul>
- * <li>{@code hour} (a non-null {@code Int32});
- * <li>{@code minute} (a non-null {@code Int32});
- * <li>{@code second} (a non-null {@code Int32});
- * <li>{@code nano} (a non-null {@code Int32}).
- * </ul>
- * </ul>
+ * The field values depend on provided codecs.
  * <p>
  * This type is <b>immutable</b>.
  */
 public final class LocalDateTimeAsDocumentCodec
         implements Codec<LocalDateTime> {
 
-    private final Codec<LocalDate> localDateCodec =
-            new LocalDateAsDocumentCodec();
+    private final Codec<LocalDate> localDateCodec;
+    private final Codec<LocalTime> localTimeCodec;
 
-    private final Codec<LocalTime> localTimeCodec =
-            new LocalTimeAsDocumentCodec();
+    private final Map<String, Decoder<?>> fieldDecoders;
 
     /**
-     * Converts the document to a local date time.
-     *
-     * @param document not null
-     *
-     * @return a non-null {@code LocalDateTime}
+     * Creates a {@code LocalDateTimeAsDocumentCodec} using:
+     * <ul>
+     * <li>a {@code LocalDateAsDocumentCodec};
+     * <li>a {@code LocalTimeAsDocumentCodec}.
+     * </ul>
      */
-    public static LocalDateTime fromDocument(Document document) {
-        return of(
-                LocalDateAsDocumentCodec.fromDocument(
-                        getFieldValue(document, "date", Document.class)
-                ),
-                LocalTimeAsDocumentCodec.fromDocument(
-                        getFieldValue(document, "time", Document.class)
-                )
+    public LocalDateTimeAsDocumentCodec() {
+        this(
+                new LocalDateAsDocumentCodec(),
+                new LocalTimeAsDocumentCodec()
         );
+    }
+
+    /**
+     * Creates a {@code LocalDateTimeAsDocumentCodec} using
+     * the provided codecs.
+     */
+    public LocalDateTimeAsDocumentCodec(
+            Codec<LocalDate> localDateCodec,
+            Codec<LocalTime> localTimeCodec) {
+
+        this.localDateCodec = localDateCodec;
+        this.localTimeCodec = localTimeCodec;
+
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("date", localDateCodec::decode);
+        fd.put("time", localTimeCodec::decode);
+        fieldDecoders = unmodifiableMap(fd);
     }
 
     @Override
@@ -111,13 +116,45 @@ public final class LocalDateTimeAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
-                LocalDateTimeAsDocumentCodec::fromDocument
+                () -> readDocument(reader, decoderContext, fieldDecoders),
+                val -> of(
+                        getFieldValue(val, "date", LocalDate.class),
+                        getFieldValue(val, "time", LocalTime.class)
+                )
         );
     }
 
     @Override
     public Class<LocalDateTime> getEncoderClass() {
         return LocalDateTime.class;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+
+        LocalDateTimeAsDocumentCodec rhs = (LocalDateTimeAsDocumentCodec)obj;
+
+        return localDateCodec.equals(rhs.localDateCodec) &&
+               localTimeCodec.equals(rhs.localTimeCodec) &&
+               fieldDecoders.equals(rhs.fieldDecoders);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = localDateCodec.hashCode();
+        result = 31 * result + localTimeCodec.hashCode();
+        result = 31 * result + fieldDecoders.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LocalDateTimeAsDocumentCodec[" +
+               "localDateCodec=" + localDateCodec +
+               ",localTimeCodec=" + localTimeCodec +
+               ",fieldDecoders=" + fieldDecoders +
+               ']';
     }
 }

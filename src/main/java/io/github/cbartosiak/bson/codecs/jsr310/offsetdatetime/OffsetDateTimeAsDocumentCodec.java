@@ -20,16 +20,20 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.OffsetDateTime.of;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -39,42 +43,58 @@ import org.bson.codecs.EncoderContext;
  * {@code BSON Document}, such as:
  * <pre>
  * {
- *     dateTime: {
- *         date: { year: 2018, month: 1, day: 2 },
- *         time: { hour: 10, minute: 15, second: 30, nano: 0 }
- *     },
- *     offset: 3600
+ *     dateTime: ...,
+ *     offset: ...
  * }
  * </pre>
  * <p>
  * The values are stored using the following structure:
  * <ul>
- * <li>{@code dateTime} (a non-null {@code Document}):
- * <ul>
- * <li>{@code date} (a non-null {@code Document}):
- * <ul>
- * <li>{@code year} (a non-null {@code Int32});
- * <li>{@code month} (a non-null {@code Int32});
- * <li>{@code day} (a non-null {@code Int32});
+ * <li>{@code dateTime} (a non-null value);
+ * <li>{@code offset} (a non-null value).
  * </ul>
- * <li>{@code time} (a non-null {@code Document}):
- * <ul>
- * <li>{@code hour} (a non-null {@code Int32});
- * <li>{@code minute} (a non-null {@code Int32});
- * <li>{@code second} (a non-null {@code Int32});
- * <li>{@code nano} (a non-null {@code Int32});
- * </ul>
- * </ul>
- * <li>{@code offset} (a non-null {@code Int32}).
- * </ul>
+ * The field values depend on provided codecs.
  * <p>
  * This type is <b>immutable</b>.
  */
 public final class OffsetDateTimeAsDocumentCodec
         implements Codec<OffsetDateTime> {
 
-    private final Codec<LocalDateTime> localDateTimeCodec =
-            new LocalDateTimeAsDocumentCodec();
+    private final Codec<LocalDateTime> localDateTimeCodec;
+    private final Codec<ZoneOffset>    zoneOffsetCodec;
+
+    private final Map<String, Decoder<?>> fieldDecoders;
+
+    /**
+     * Creates an {@code OffsetDateTimeAsDocumentCodec} using:
+     * <ul>
+     * <li>a {@code LocalDateTimeAsDocumentCodec};
+     * <li>a {@code ZoneOffsetAsInt32Codec}.
+     * </ul>
+     */
+    public OffsetDateTimeAsDocumentCodec() {
+        this(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsInt32Codec()
+        );
+    }
+
+    /**
+     * Creates an {@code OffsetDateTimeAsDocumentCodec} using
+     * the provided codecs.
+     */
+    public OffsetDateTimeAsDocumentCodec(
+            Codec<LocalDateTime> localDateTimeCodec,
+            Codec<ZoneOffset> zoneOffsetCodec) {
+
+        this.localDateTimeCodec = localDateTimeCodec;
+        this.zoneOffsetCodec = zoneOffsetCodec;
+
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("dateTime", localDateTimeCodec::decode);
+        fd.put("offset", zoneOffsetCodec::decode);
+        fieldDecoders = unmodifiableMap(fd);
+    }
 
     @Override
     public void encode(
@@ -87,7 +107,8 @@ public final class OffsetDateTimeAsDocumentCodec
         localDateTimeCodec.encode(
                 writer, value.toLocalDateTime(), encoderContext
         );
-        writer.writeInt32("offset", value.getOffset().getTotalSeconds());
+        writer.writeName("offset");
+        zoneOffsetCodec.encode(writer, value.getOffset(), encoderContext);
         writer.writeEndDocument();
     }
 
@@ -97,14 +118,10 @@ public final class OffsetDateTimeAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
+                () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> of(
-                        LocalDateTimeAsDocumentCodec.fromDocument(
-                                getFieldValue(val, "dateTime", Document.class)
-                        ),
-                        ZoneOffset.ofTotalSeconds(
-                                getFieldValue(val, "offset", Integer.class)
-                        )
+                        getFieldValue(val, "dateTime", LocalDateTime.class),
+                        getFieldValue(val, "offset", ZoneOffset.class)
                 )
         );
     }
@@ -112,5 +129,34 @@ public final class OffsetDateTimeAsDocumentCodec
     @Override
     public Class<OffsetDateTime> getEncoderClass() {
         return OffsetDateTime.class;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+
+        OffsetDateTimeAsDocumentCodec rhs = (OffsetDateTimeAsDocumentCodec)obj;
+
+        return localDateTimeCodec.equals(rhs.localDateTimeCodec) &&
+               zoneOffsetCodec.equals(rhs.zoneOffsetCodec) &&
+               fieldDecoders.equals(rhs.fieldDecoders);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = localDateTimeCodec.hashCode();
+        result = 31 * result + zoneOffsetCodec.hashCode();
+        result = 31 * result + fieldDecoders.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "OffsetDateTimeAsDocumentCodec[" +
+               "localDateTimeCodec=" + localDateTimeCodec +
+               ",zoneOffsetCodec=" + zoneOffsetCodec +
+               ",fieldDecoders=" + fieldDecoders +
+               ']';
     }
 }

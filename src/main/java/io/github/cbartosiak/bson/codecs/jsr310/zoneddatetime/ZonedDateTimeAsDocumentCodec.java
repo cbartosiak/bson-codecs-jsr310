@@ -20,17 +20,22 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.ZonedDateTime.ofStrict;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneid.ZoneIdAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -40,44 +45,66 @@ import org.bson.codecs.EncoderContext;
  * {@code BSON Document}, such as:
  * <pre>
  * {
- *     dateTime: {
- *         date: { year: 2018, month: 1, day: 2 },
- *         time: { hour: 10, minute: 15, second: 30, nano: 0 }
- *     },
- *     offset: 3600,
- *     zone: "CET"
+ *     dateTime: ...,
+ *     offset: ...,
+ *     zone: ...
  * }
  * </pre>
  * <p>
  * The values are stored using the following structure:
  * <ul>
- * <li>{@code dateTime} (a non-null {@code Document}):
- * <ul>
- * <li>{@code date} (a non-null {@code Document}):
- * <ul>
- * <li>{@code year} (a non-null {@code Int32});
- * <li>{@code month} (a non-null {@code Int32});
- * <li>{@code day} (a non-null {@code Int32});
+ * <li>{@code dateTime} (a non-null value);
+ * <li>{@code offset} (a non-null value);
+ * <li>{@code zone} (a non-null value).
  * </ul>
- * <li>{@code time} (a non-null {@code Document}):
- * <ul>
- * <li>{@code hour} (a non-null {@code Int32});
- * <li>{@code minute} (a non-null {@code Int32});
- * <li>{@code second} (a non-null {@code Int32});
- * <li>{@code nano} (a non-null {@code Int32});
- * </ul>
- * </ul>
- * <li>{@code offset} (a non-null {@code Int32});
- * <li>{@code zone} (a non-null {@code String}).
- * </ul>
+ * The field values depend on provided codecs.
  * <p>
  * This type is <b>immutable</b>.
  */
 public final class ZonedDateTimeAsDocumentCodec
         implements Codec<ZonedDateTime> {
 
-    private final Codec<LocalDateTime> localDateTimeCodec =
-            new LocalDateTimeAsDocumentCodec();
+    private final Codec<LocalDateTime> localDateTimeCodec;
+    private final Codec<ZoneOffset>    zoneOffsetCodec;
+    private final Codec<ZoneId>        zoneIdCodec;
+
+    private final Map<String, Decoder<?>> fieldDecoders;
+
+    /**
+     * Creates a {@code ZonedDateTimeAsDocumentCodec} using:
+     * <ul>
+     * <li>a {@code LocalDateTimeAsDocumentCodec};
+     * <li>a {@code ZoneOffsetAsInt32Codec};
+     * <li>a {@code ZoneIdAsStringCodec}.
+     * </ul>
+     */
+    public ZonedDateTimeAsDocumentCodec() {
+        this(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsInt32Codec(),
+                new ZoneIdAsStringCodec()
+        );
+    }
+
+    /**
+     * Creates an {@code ZonedDateTimeAsDocumentCodec} using
+     * the provided codecs.
+     */
+    public ZonedDateTimeAsDocumentCodec(
+            Codec<LocalDateTime> localDateTimeCodec,
+            Codec<ZoneOffset> zoneOffsetCodec,
+            Codec<ZoneId> zoneIdCodec) {
+
+        this.localDateTimeCodec = localDateTimeCodec;
+        this.zoneOffsetCodec = zoneOffsetCodec;
+        this.zoneIdCodec = zoneIdCodec;
+
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("dateTime", localDateTimeCodec::decode);
+        fd.put("offset", zoneOffsetCodec::decode);
+        fd.put("zone", zoneIdCodec::decode);
+        fieldDecoders = unmodifiableMap(fd);
+    }
 
     @Override
     public void encode(
@@ -90,8 +117,10 @@ public final class ZonedDateTimeAsDocumentCodec
         localDateTimeCodec.encode(
                 writer, value.toLocalDateTime(), encoderContext
         );
-        writer.writeInt32("offset", value.getOffset().getTotalSeconds());
-        writer.writeString("zone", value.getZone().getId());
+        writer.writeName("offset");
+        zoneOffsetCodec.encode(writer, value.getOffset(), encoderContext);
+        writer.writeName("zone");
+        zoneIdCodec.encode(writer, value.getZone(), encoderContext);
         writer.writeEndDocument();
     }
 
@@ -101,17 +130,11 @@ public final class ZonedDateTimeAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
+                () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> ofStrict(
-                        LocalDateTimeAsDocumentCodec.fromDocument(
-                                getFieldValue(val, "dateTime", Document.class)
-                        ),
-                        ZoneOffset.ofTotalSeconds(
-                                getFieldValue(val, "offset", Integer.class)
-                        ),
-                        ZoneId.of(
-                                getFieldValue(val, "zone", String.class)
-                        )
+                        getFieldValue(val, "dateTime", LocalDateTime.class),
+                        getFieldValue(val, "offset", ZoneOffset.class),
+                        getFieldValue(val, "zone", ZoneId.class)
                 )
         );
     }
@@ -119,5 +142,37 @@ public final class ZonedDateTimeAsDocumentCodec
     @Override
     public Class<ZonedDateTime> getEncoderClass() {
         return ZonedDateTime.class;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) { return true; }
+        if (obj == null || getClass() != obj.getClass()) { return false; }
+
+        ZonedDateTimeAsDocumentCodec rhs = (ZonedDateTimeAsDocumentCodec)obj;
+
+        return localDateTimeCodec.equals(rhs.localDateTimeCodec) &&
+               zoneOffsetCodec.equals(rhs.zoneOffsetCodec) &&
+               zoneIdCodec.equals(rhs.zoneIdCodec) &&
+               fieldDecoders.equals(rhs.fieldDecoders);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = localDateTimeCodec.hashCode();
+        result = 31 * result + zoneOffsetCodec.hashCode();
+        result = 31 * result + zoneIdCodec.hashCode();
+        result = 31 * result + fieldDecoders.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ZonedDateTimeAsDocumentCodec[" +
+               "localDateTimeCodec=" + localDateTimeCodec +
+               ",zoneOffsetCodec=" + zoneOffsetCodec +
+               ",zoneIdCodec=" + zoneIdCodec +
+               ",fieldDecoders=" + fieldDecoders +
+               ']';
     }
 }

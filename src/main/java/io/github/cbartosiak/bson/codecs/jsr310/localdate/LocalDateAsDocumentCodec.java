@@ -20,13 +20,16 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalDate.of;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -48,19 +51,14 @@ import org.bson.codecs.EncoderContext;
 public final class LocalDateAsDocumentCodec
         implements Codec<LocalDate> {
 
-    /**
-     * Converts the document to a local date.
-     *
-     * @param document not null
-     *
-     * @return a non-null {@code LocalDate}
-     */
-    public static LocalDate fromDocument(Document document) {
-        return of(
-                getFieldValue(document, "year", Integer.class),
-                getFieldValue(document, "month", Integer.class),
-                getFieldValue(document, "day", Integer.class)
-        );
+    private static final Map<String, Decoder<?>> FIELD_DECODERS;
+
+    static {
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("year", (r, dc) -> r.readInt32());
+        fd.put("month", (r, dc) -> r.readInt32());
+        fd.put("day", (r, dc) -> r.readInt32());
+        FIELD_DECODERS = unmodifiableMap(fd);
     }
 
     @Override
@@ -82,8 +80,12 @@ public final class LocalDateAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
-                LocalDateAsDocumentCodec::fromDocument
+                () -> readDocument(reader, decoderContext, FIELD_DECODERS),
+                val -> of(
+                        getFieldValue(val, "year", Integer.class),
+                        getFieldValue(val, "month", Integer.class),
+                        getFieldValue(val, "day", Integer.class)
+                )
         );
     }
 

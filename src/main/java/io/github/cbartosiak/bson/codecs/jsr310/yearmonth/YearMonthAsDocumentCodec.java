@@ -20,12 +20,16 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.getFie
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDocument;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.YearMonth.of;
+import static java.util.Collections.unmodifiableMap;
 
 import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
@@ -46,6 +50,15 @@ import org.bson.codecs.EncoderContext;
 public final class YearMonthAsDocumentCodec
         implements Codec<YearMonth> {
 
+    private static final Map<String, Decoder<?>> FIELD_DECODERS;
+
+    static {
+        Map<String, Decoder<?>> fd = new HashMap<>();
+        fd.put("year", (r, dc) -> r.readInt32());
+        fd.put("month", (r, dc) -> r.readInt32());
+        FIELD_DECODERS = unmodifiableMap(fd);
+    }
+
     @Override
     public void encode(
             BsonWriter writer,
@@ -64,7 +77,7 @@ public final class YearMonthAsDocumentCodec
             DecoderContext decoderContext) {
 
         return translateDecodeExceptions(
-                () -> readDocument(reader, decoderContext),
+                () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> of(
                         getFieldValue(val, "year", Integer.class),
                         getFieldValue(val, "month", Integer.class)

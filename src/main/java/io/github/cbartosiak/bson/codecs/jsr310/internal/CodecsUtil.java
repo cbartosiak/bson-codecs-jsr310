@@ -17,23 +17,21 @@
 package io.github.cbartosiak.bson.codecs.jsr310.internal;
 
 import static java.lang.String.format;
+import static org.bson.BsonType.END_OF_DOCUMENT;
 
 import java.time.DateTimeException;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
-import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
-import org.bson.codecs.DocumentCodec;
-import org.bson.codecs.EncoderContext;
 
 public final class CodecsUtil {
-
-    private static final DocumentCodec DOCUMENT_CODEC = new DocumentCodec();
 
     private CodecsUtil() {}
 
@@ -47,9 +45,9 @@ public final class CodecsUtil {
         try {
             valueConsumer.accept(value);
         }
-        catch (NumberFormatException |
-                ArithmeticException |
-                DateTimeException ex) {
+        catch (ArithmeticException |
+                DateTimeException |
+                NumberFormatException ex) {
 
             throw new BsonInvalidOperationException(format(
                     "The value %s is not supported", value
@@ -66,7 +64,8 @@ public final class CodecsUtil {
             return valueConverter.apply(value);
         }
         catch (ArithmeticException |
-                DateTimeException ex) {
+                DateTimeException |
+                IllegalArgumentException ex) {
 
             throw new BsonInvalidOperationException(format(
                     "The value %s is not supported", value
@@ -76,19 +75,31 @@ public final class CodecsUtil {
 
     // Document codecs
 
-    public static void writeDocument(
-            BsonWriter writer,
-            Document document,
-            EncoderContext encoderContext) {
-
-        DOCUMENT_CODEC.encode(writer, document, encoderContext);
-    }
-
     public static Document readDocument(
             BsonReader reader,
-            DecoderContext decoderContext) {
+            DecoderContext decoderContext,
+            Map<String, Decoder<?>> fieldDecoders) {
 
-        return DOCUMENT_CODEC.decode(reader, decoderContext);
+        Document document = new Document();
+        reader.readStartDocument();
+        while (reader.readBsonType() != END_OF_DOCUMENT) {
+            String fieldName = reader.readName();
+            if (fieldDecoders.containsKey(fieldName)) {
+                document.put(
+                        fieldName,
+                        fieldDecoders
+                                .get(fieldName)
+                                .decode(reader, decoderContext)
+                );
+            }
+            else {
+                throw new BsonInvalidOperationException(format(
+                        "The field %s is not expected here", fieldName
+                ));
+            }
+        }
+        reader.readEndDocument();
+        return document;
     }
 
     public static <Value> Value getFieldValue(
@@ -100,14 +111,14 @@ public final class CodecsUtil {
             Value value = document.get(key, clazz);
             if (value == null) {
                 throw new BsonInvalidOperationException(format(
-                        "The value of %s is null", key
+                        "The value of the field %s is null", key
                 ));
             }
             return value;
         }
         catch (ClassCastException ex) {
             throw new BsonInvalidOperationException(format(
-                    "The value of %s is not of the type %s",
+                    "The value of the field %s is not of the type %s",
                     key, clazz.getName()
             ), ex);
         }

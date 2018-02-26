@@ -23,6 +23,9 @@ import static java.time.OffsetDateTime.now;
 import java.time.OffsetDateTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsStringCodec;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
@@ -46,5 +49,21 @@ final class OffsetDateTimeCodecsTests
     @Test
     void testOffsetDateTimeAsDocumentCodec() {
         testOffsetDateTimeCodec(new OffsetDateTimeAsDocumentCodec());
+    }
+
+    @Test
+    void testOffsetDateTimeAsDocumentCodecV1() {
+        testOffsetDateTimeCodec(new OffsetDateTimeAsDocumentCodec(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsStringCodec()
+        ));
+    }
+
+    @Test
+    void testOffsetDateTimeAsDocumentCodecV2() {
+        testOffsetDateTimeCodec(new OffsetDateTimeAsDocumentCodec(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsInt32Codec()
+        ));
     }
 }

@@ -16,16 +16,18 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 
-import static java.time.ZoneId.getAvailableZoneIds;
 import static java.time.ZonedDateTime.now;
 import static java.time.ZonedDateTime.of;
 
 import java.time.Year;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneid.ZoneIdAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsStringCodec;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
@@ -37,15 +39,13 @@ final class ZonedDateTimeCodecsTests
 
     private static void testZonedDateTimeCodec(Codec<ZonedDateTime> codec) {
         testCodec(codec, of(
-                Year.MIN_VALUE, 1, 1, 0, 0, 0, 0, ZoneOffset.MIN
+                Year.MIN_VALUE, 1, 1, 0, 0, 0, 0, ZoneId.of("Etc/GMT+12")
         ));
         testCodec(codec, of(
-                Year.MAX_VALUE, 12, 31, 23, 59, 59, 999, ZoneOffset.MAX
+                Year.MAX_VALUE, 12, 31, 23, 59, 59, 999, ZoneId.of("Etc/GMT-14")
         ));
         testCodec(codec, now());
-        testCodec(codec, now(ZoneId.of(
-                getAvailableZoneIds().stream().findAny().orElse("UTC")
-        )));
+        testCodec(codec, now(ZoneId.of("UTC")));
     }
 
     @Test
@@ -56,5 +56,23 @@ final class ZonedDateTimeCodecsTests
     @Test
     void testZonedDateTimeAsDocumentCodec() {
         testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec());
+    }
+
+    @Test
+    void testZonedDateTimeAsDocumentCodecV1() {
+        testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsStringCodec(),
+                new ZoneIdAsStringCodec()
+        ));
+    }
+
+    @Test
+    void testZonedDateTimeAsDocumentCodecV2() {
+        testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec(
+                new LocalDateTimeAsDocumentCodec(),
+                new ZoneOffsetAsInt32Codec(),
+                new ZoneIdAsStringCodec()
+        ));
     }
 }

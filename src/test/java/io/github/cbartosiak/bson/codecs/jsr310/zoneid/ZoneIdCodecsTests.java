@@ -16,6 +16,7 @@
 
 package io.github.cbartosiak.bson.codecs.jsr310.zoneid;
 
+import static java.time.ZoneId.getAvailableZoneIds;
 import static java.time.ZoneId.of;
 
 import java.time.ZoneId;
@@ -34,6 +35,7 @@ final class ZoneIdCodecsTests
         testCodec(codec, of("Etc/GMT+12"));
         testCodec(codec, of("Etc/GMT-14"));
         testCodec(codec, of("UTC"));
+        getAvailableZoneIds().forEach(zoneId -> testCodec(codec, of(zoneId)));
     }
 
     @Test
