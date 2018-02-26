@@ -23,7 +23,7 @@ The library provides codecs for the following JSR-310 classes:
 
 ### Usage
 
-The library is available in Maven Central Repository:
+It is available in Maven Central Repository:
 ```
 <dependency>
     <groupId>io.github.cbartosiak</groupId>
