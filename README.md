@@ -51,9 +51,9 @@ MongoDatabase database = client
 
 Note that depending on a context a different set of codecs might be necessary.
 There are three main factors to consider when choosing codecs:
-* **queryability** - how much are stored values capable of being searched;
-* **sortability** - how much are stored values capable of being ordered;
-* **readability** - how much are stored values readable for human.
+* **queryability** - how much stored values are capable of being searched;
+* **sortability** - how much stored values are capable of being ordered;
+* **readability** - how much stored values are readable for human.
 
 The table below presents the recommendations for all the factors. The more **+**
 signs a cell contains the better a row codec is in terms of a column factor:
