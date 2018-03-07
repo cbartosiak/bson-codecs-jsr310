@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -84,6 +84,14 @@
         <!-- Maven Enforcer Plugin -->
         <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
 
+        <maven-enforcer-plugin.requireJavaVersion>
+            1.8
+        </maven-enforcer-plugin.requireJavaVersion>
+
+        <maven-enforcer-plugin.requireMavenVersion>
+            3.0.4
+        </maven-enforcer-plugin.requireMavenVersion>
+
         <!-- Maven GPG Plugin -->
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
@@ -154,10 +162,14 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>1.8</version>
+                                    <version>
+                                        ${maven-enforcer-plugin.requireJavaVersion}
+                                    </version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>3.0.4</version>
+                                    <version>
+                                        ${maven-enforcer-plugin.requireMavenVersion}
+                                    </version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -239,6 +251,9 @@
                                 -Xdoclint:none
                             </additionalOptions>
                             <links>
+                                <link>
+                                    https://docs.oracle.com/javase/8/docs/api
+                                </link>
                                 <link>
                                     http://mongodb.github.io/mongo-java-driver/3.6/javadoc
                                 </link>
