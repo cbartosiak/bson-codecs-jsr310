@@ -28,7 +28,7 @@ It is available in Maven Central Repository:
 <dependency>
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
 </dependency>
 ```
 
