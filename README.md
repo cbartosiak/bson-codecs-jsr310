@@ -1,7 +1,8 @@
 ## BSON codecs for Java 8 Date and Time API (JSR-310)
 
-[![Build Status](https://travis-ci.org/cbartosiak/bson-codecs-jsr310.svg?branch=dev)](https://travis-ci.org/cbartosiak/bson-codecs-jsr310)
-[![Javadocs](https://www.javadoc.io/badge/io.github.cbartosiak/bson-codecs-jsr310.svg?color=blue&version=3.0.3)](https://www.javadoc.io/doc/io.github.cbartosiak/bson-codecs-jsr310)
+[![Build Status](https://travis-ci.org/cbartosiak/bson-codecs-jsr310.svg?branch=master)](https://travis-ci.org/cbartosiak/bson-codecs-jsr310/branches)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.cbartosiak/bson-codecs-jsr310/3.0.4.svg)](https://mvnrepository.com/artifact/io.github.cbartosiak/bson-codecs-jsr310/3.0.4)
+[![Javadocs](https://www.javadoc.io/badge/io.github.cbartosiak/bson-codecs-jsr310/3.0.4.svg?color=red)](https://www.javadoc.io/doc/io.github.cbartosiak/bson-codecs-jsr310/3.0.4)
 
 The library provides codecs for the following JSR-310 classes:
 * `java.time.DayOfWeek`
@@ -22,15 +23,6 @@ The library provides codecs for the following JSR-310 classes:
 * `java.time.ZoneOffset`
 
 ### Usage
-
-It is available in Maven Central Repository:
-```
-<dependency>
-    <groupId>io.github.cbartosiak</groupId>
-    <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.0.3</version>
-</dependency>
-```
 
 In order to utilize the codecs one can use `CodecRegistries` helper, for example
 in case of Mongo synchronous client:

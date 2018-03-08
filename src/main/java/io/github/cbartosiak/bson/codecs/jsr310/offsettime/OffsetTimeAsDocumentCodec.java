@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.OffsetTime.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalTime;
 import java.time.OffsetTime;
@@ -82,13 +83,16 @@ public final class OffsetTimeAsDocumentCodec
     /**
      * Creates an {@code OffsetTimeAsDocumentCodec} using
      * the provided codecs.
+     *
+     * @param localTimeCodec  not null
+     * @param zoneOffsetCodec not null
      */
     public OffsetTimeAsDocumentCodec(
             Codec<LocalTime> localTimeCodec,
             Codec<ZoneOffset> zoneOffsetCodec) {
 
-        this.localTimeCodec = localTimeCodec;
-        this.zoneOffsetCodec = zoneOffsetCodec;
+        this.localTimeCodec = requireNonNull(localTimeCodec);
+        this.zoneOffsetCodec = requireNonNull(zoneOffsetCodec);
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("time", localTimeCodec::decode);
