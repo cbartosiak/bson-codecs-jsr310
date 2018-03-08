@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.ZonedDateTime.ofStrict;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -87,17 +88,21 @@ public final class ZonedDateTimeAsDocumentCodec
     }
 
     /**
-     * Creates an {@code ZonedDateTimeAsDocumentCodec} using
+     * Creates a {@code ZonedDateTimeAsDocumentCodec} using
      * the provided codecs.
+     *
+     * @param localDateTimeCodec not null
+     * @param zoneOffsetCodec    not null
+     * @param zoneIdCodec        not null
      */
     public ZonedDateTimeAsDocumentCodec(
             Codec<LocalDateTime> localDateTimeCodec,
             Codec<ZoneOffset> zoneOffsetCodec,
             Codec<ZoneId> zoneIdCodec) {
 
-        this.localDateTimeCodec = localDateTimeCodec;
-        this.zoneOffsetCodec = zoneOffsetCodec;
-        this.zoneIdCodec = zoneIdCodec;
+        this.localDateTimeCodec = requireNonNull(localDateTimeCodec);
+        this.zoneOffsetCodec = requireNonNull(zoneOffsetCodec);
+        this.zoneIdCodec = requireNonNull(zoneIdCodec);
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("dateTime", localDateTimeCodec::decode);

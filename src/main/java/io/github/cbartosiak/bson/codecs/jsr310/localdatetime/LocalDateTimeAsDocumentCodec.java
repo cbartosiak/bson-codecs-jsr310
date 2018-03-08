@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalDateTime.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -82,13 +83,16 @@ public final class LocalDateTimeAsDocumentCodec
     /**
      * Creates a {@code LocalDateTimeAsDocumentCodec} using
      * the provided codecs.
+     *
+     * @param localDateCodec not null
+     * @param localTimeCodec not null
      */
     public LocalDateTimeAsDocumentCodec(
             Codec<LocalDate> localDateCodec,
             Codec<LocalTime> localTimeCodec) {
 
-        this.localDateCodec = localDateCodec;
-        this.localTimeCodec = localTimeCodec;
+        this.localDateCodec = requireNonNull(localDateCodec);
+        this.localTimeCodec = requireNonNull(localTimeCodec);
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("date", localDateCodec::decode);
