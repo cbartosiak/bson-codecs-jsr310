@@ -1,8 +1,8 @@
 ## BSON codecs for Java 8 Date and Time API (JSR-310)
 
 [![Build Status](https://travis-ci.org/cbartosiak/bson-codecs-jsr310.svg?branch=master)](https://travis-ci.org/cbartosiak/bson-codecs-jsr310/branches)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.cbartosiak/bson-codecs-jsr310/3.0.4.svg)](https://mvnrepository.com/artifact/io.github.cbartosiak/bson-codecs-jsr310/3.0.4)
-[![Javadocs](https://www.javadoc.io/badge/io.github.cbartosiak/bson-codecs-jsr310/3.0.4.svg?color=red)](https://www.javadoc.io/doc/io.github.cbartosiak/bson-codecs-jsr310/3.0.4)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.cbartosiak/bson-codecs-jsr310/3.1.0.svg)](https://mvnrepository.com/artifact/io.github.cbartosiak/bson-codecs-jsr310/3.1.0)
+[![Javadocs](https://www.javadoc.io/badge/io.github.cbartosiak/bson-codecs-jsr310/3.1.0.svg?color=red)](https://www.javadoc.io/doc/io.github.cbartosiak/bson-codecs-jsr310/3.1.0)
 
 The library provides codecs for the following JSR-310 classes:
 * `java.time.DayOfWeek`
