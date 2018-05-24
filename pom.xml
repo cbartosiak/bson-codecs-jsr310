@@ -67,9 +67,6 @@
     <!-- Properties -->
     <properties>
 
-        <!-- API Guardian-->
-        <apiguardian-api.version>1.0.0</apiguardian-api.version>
-
         <!-- BSON -->
         <bson.version>3.7.0</bson.version>
 
