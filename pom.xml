@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -119,14 +119,6 @@
 
     <!-- Dependencies -->
     <dependencies>
-
-        <!-- API Guardian-->
-        <dependency>
-            <groupId>org.apiguardian</groupId>
-            <artifactId>apiguardian-api</artifactId>
-            <version>${apiguardian-api.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- BSON -->
         <dependency>
