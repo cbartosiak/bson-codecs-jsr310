@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.1.3</version>
+    <version>3.2.0</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -68,32 +68,31 @@
     <properties>
 
         <!-- BSON -->
-        <bson.version>3.7.1</bson.version>
+        <bson.version>3.8.2</bson.version>
 
         <!-- JUnit -->
-        <junit-jupiter.version>5.2.0</junit-jupiter.version>
-        <junit-platform.version>1.2.0</junit-platform.version>
+        <junit-jupiter.version>5.3.1</junit-jupiter.version>
 
         <!-- Maven Compiler Plugin -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- Maven Enforcer Plugin -->
-        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
 
         <maven-enforcer-plugin.requireJavaVersion>
             1.8
         </maven-enforcer-plugin.requireJavaVersion>
 
         <maven-enforcer-plugin.requireMavenVersion>
-            3.0.4
+            3.0.5
         </maven-enforcer-plugin.requireMavenVersion>
 
         <!-- Maven GPG Plugin -->
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
         <!-- Maven Javadoc Plugin -->
-        <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
 
         <!-- Maven Resources Plugin -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -102,7 +101,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 
         <!-- Maven Surefire Plugin -->
-        <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
 
         <!-- Nexus Staging Maven Plugin -->
         <nexus-staging-maven-plugin.version>
@@ -110,7 +109,7 @@
         </nexus-staging-maven-plugin.version>
 
         <!-- Versions Maven Plugin -->
-        <versions-maven-plugin.version>2.5</versions-maven-plugin.version>
+        <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
     </properties>
 
@@ -128,6 +127,13 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
@@ -171,23 +177,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit-jupiter.version}</version>
-                    </dependency>
-
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>
-                            junit-platform-surefire-provider
-                        </artifactId>
-                        <version>${junit-platform.version}</version>
-                    </dependency>
-
-                </dependencies>
                 <configuration>
                     <includes>
                         <include>**/*Tests.java</include>
@@ -244,7 +233,7 @@
                                     https://docs.oracle.com/javase/8/docs/api
                                 </link>
                                 <link>
-                                    http://mongodb.github.io/mongo-java-driver/3.7/javadoc
+                                    http://mongodb.github.io/mongo-java-driver/3.8/javadoc
                                 </link>
                             </links>
                         </configuration>
