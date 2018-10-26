@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.monthday;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.MonthDay;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code MonthDay} values to and from
- * {@code BSON String}, such as
- * {@code --01-02}.
+ * {@code BSON String}, such as {@code --01-02}.
  * <p>
  * The values are stored as <i>quasi</i> {@code ISO-8601} formatted strings
  * (see {@link MonthDay}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class MonthDayAsStringCodec
-        implements Codec<MonthDay> {
+public final class MonthDayAsStringCodec implements Codec<MonthDay> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class MonthDayAsStringCodec
             MonthDay value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.toString());
     }
 
@@ -54,6 +55,7 @@ public final class MonthDayAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 MonthDay::parse

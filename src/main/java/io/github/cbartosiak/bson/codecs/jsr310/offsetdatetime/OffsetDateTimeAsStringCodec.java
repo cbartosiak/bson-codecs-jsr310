@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.offsetdatetime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.OffsetDateTime;
 
@@ -29,8 +30,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code OffsetDateTime} values to and from
- * {@code BSON String}, such as
- * {@code 2018-01-02T10:15:30+01:00}.
+ * {@code BSON String}, such as {@code 2018-01-02T10:15:30+01:00}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
  * (see {@link OffsetDateTime#toString()}).
@@ -46,6 +46,8 @@ public final class OffsetDateTimeAsStringCodec
             OffsetDateTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.toString());
     }
 
@@ -54,6 +56,7 @@ public final class OffsetDateTimeAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 OffsetDateTime::parse

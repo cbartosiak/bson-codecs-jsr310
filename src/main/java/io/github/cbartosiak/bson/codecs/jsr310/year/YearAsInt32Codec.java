@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.year;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Year;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Year} values to and from
- * {@code BSON Int32}, such as
- * {@code 2018}.
+ * {@code BSON Int32}, such as {@code 2018}.
  * <p>
  * The values are stored as ISO proleptic year integers
  * (see {@link Year#getValue()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class YearAsInt32Codec
-        implements Codec<Year> {
+public final class YearAsInt32Codec implements Codec<Year> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class YearAsInt32Codec
             Year value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeInt32(value.getValue());
     }
 
@@ -54,6 +55,7 @@ public final class YearAsInt32Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readInt32,
                 Year::of

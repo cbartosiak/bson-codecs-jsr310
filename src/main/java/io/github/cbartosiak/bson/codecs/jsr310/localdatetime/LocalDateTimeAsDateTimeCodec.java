@@ -20,6 +20,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.transl
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
 import static java.time.Instant.ofEpochMilli;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDateTime;
 
@@ -51,6 +52,8 @@ public final class LocalDateTimeAsDateTimeCodec
             LocalDateTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDateTime(
@@ -65,6 +68,7 @@ public final class LocalDateTimeAsDateTimeCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readDateTime,
                 val -> ofEpochMilli(val)

@@ -18,20 +18,25 @@ package io.github.cbartosiak.bson.codecs.jsr310.monthday;
 
 import static java.time.MonthDay.now;
 import static java.time.MonthDay.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.MonthDay;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class MonthDayCodecsTests
-        extends AbstractCodecsTests {
+final class MonthDayCodecsTests extends AbstractCodecsTests {
 
     private MonthDayCodecsTests() {}
 
     private static void testMonthDayCodec(Codec<MonthDay> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, of(1, 1));
         testCodec(codec, of(12, 31));
         testCodec(codec, now());

@@ -18,6 +18,7 @@ package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Instant;
 
@@ -36,8 +37,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class InstantAsDateTimeCodec
-        implements Codec<Instant> {
+public final class InstantAsDateTimeCodec implements Codec<Instant> {
 
     @Override
     public void encode(
@@ -45,6 +45,8 @@ public final class InstantAsDateTimeCodec
             Instant value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDateTime(val.toEpochMilli())
@@ -56,6 +58,7 @@ public final class InstantAsDateTimeCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readDateTime,
                 Instant::ofEpochMilli

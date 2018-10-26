@@ -18,20 +18,25 @@ package io.github.cbartosiak.bson.codecs.jsr310.period;
 
 import static java.time.Period.ZERO;
 import static java.time.Period.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Period;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class PeriodCodecsTests
-        extends AbstractCodecsTests {
+final class PeriodCodecsTests extends AbstractCodecsTests {
 
     private PeriodCodecsTests() {}
 
     private static void testPeriodCodec(Codec<Period> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, ZERO);
         testCodec(codec, of(
                 Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE

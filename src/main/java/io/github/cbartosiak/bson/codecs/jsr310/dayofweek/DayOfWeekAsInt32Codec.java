@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.dayofweek;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.DayOfWeek;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code DayOfWeek} values to and from
- * {@code BSON Int32}, such as
- * {@code 2}.
+ * {@code BSON Int32}, such as {@code 2}.
  * <p>
  * The values are stored as {@code ISO-8601} integers
  * (see {@link DayOfWeek#getValue()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class DayOfWeekAsInt32Codec
-        implements Codec<DayOfWeek> {
+public final class DayOfWeekAsInt32Codec implements Codec<DayOfWeek> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class DayOfWeekAsInt32Codec
             DayOfWeek value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeInt32(value.getValue());
     }
 
@@ -54,6 +55,7 @@ public final class DayOfWeekAsInt32Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readInt32,
                 DayOfWeek::of

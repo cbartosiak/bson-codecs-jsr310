@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalDate.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -36,8 +37,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code LocalDate} values to and from
- * {@code BSON Document}, such as
- * {@code { year: 2018, month: 1, day: 2 }}.
+ * {@code BSON Document}, such as {@code { year: 2018, month: 1, day: 2 }}.
  * <p>
  * The values are stored using the following structure:
  * <ul>
@@ -48,8 +48,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalDateAsDocumentCodec
-        implements Codec<LocalDate> {
+public final class LocalDateAsDocumentCodec implements Codec<LocalDate> {
 
     private static final Map<String, Decoder<?>> FIELD_DECODERS;
 
@@ -67,6 +66,8 @@ public final class LocalDateAsDocumentCodec
             LocalDate value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeStartDocument();
         writer.writeInt32("year", value.getYear());
         writer.writeInt32("month", value.getMonthValue());
@@ -79,6 +80,7 @@ public final class LocalDateAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> of(

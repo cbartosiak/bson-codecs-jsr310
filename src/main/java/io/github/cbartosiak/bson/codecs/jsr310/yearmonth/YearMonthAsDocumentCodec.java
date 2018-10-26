@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.YearMonth.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.YearMonth;
 import java.util.HashMap;
@@ -36,8 +37,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code YearMonth} values to and from
- * {@code BSON Document}, such as
- * {@code { year: 2018, month: 1 }}.
+ * {@code BSON Document}, such as {@code { year: 2018, month: 1 }}.
  * <p>
  * The values are stored using the following structure:
  * <ul>
@@ -47,8 +47,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class YearMonthAsDocumentCodec
-        implements Codec<YearMonth> {
+public final class YearMonthAsDocumentCodec implements Codec<YearMonth> {
 
     private static final Map<String, Decoder<?>> FIELD_DECODERS;
 
@@ -65,6 +64,8 @@ public final class YearMonthAsDocumentCodec
             YearMonth value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeStartDocument();
         writer.writeInt32("year", value.getYear());
         writer.writeInt32("month", value.getMonthValue());
@@ -76,6 +77,7 @@ public final class YearMonthAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> of(

@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.LocalTime.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -49,8 +50,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalTimeAsDocumentCodec
-        implements Codec<LocalTime> {
+public final class LocalTimeAsDocumentCodec implements Codec<LocalTime> {
 
     private static final Map<String, Decoder<?>> FIELD_DECODERS;
 
@@ -69,6 +69,8 @@ public final class LocalTimeAsDocumentCodec
             LocalTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeStartDocument();
         writer.writeInt32("hour", value.getHour());
         writer.writeInt32("minute", value.getMinute());
@@ -82,6 +84,7 @@ public final class LocalTimeAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> of(

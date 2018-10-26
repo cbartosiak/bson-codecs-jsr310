@@ -18,21 +18,26 @@ package io.github.cbartosiak.bson.codecs.jsr310.yearmonth;
 
 import static java.time.YearMonth.now;
 import static java.time.YearMonth.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Year;
 import java.time.YearMonth;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class YearMonthCodecsTests
-        extends AbstractCodecsTests {
+final class YearMonthCodecsTests extends AbstractCodecsTests {
 
     private YearMonthCodecsTests() {}
 
     private static void testYearMonthCodec(Codec<YearMonth> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, of(Year.MIN_VALUE, 1));
         testCodec(codec, of(Year.MAX_VALUE, 12));
         testCodec(codec, now());

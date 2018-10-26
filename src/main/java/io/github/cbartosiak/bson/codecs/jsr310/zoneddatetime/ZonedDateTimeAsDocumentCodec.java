@@ -30,15 +30,16 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
-import io.github.cbartosiak.bson.codecs.jsr310.zoneid.ZoneIdAsStringCodec;
-import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+
+import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneid.ZoneIdAsStringCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 
 /**
  * <p>
@@ -74,9 +75,9 @@ public final class ZonedDateTimeAsDocumentCodec
     /**
      * Creates a {@code ZonedDateTimeAsDocumentCodec} using:
      * <ul>
-     * <li>a {@code LocalDateTimeAsDocumentCodec};
-     * <li>a {@code ZoneOffsetAsInt32Codec};
-     * <li>a {@code ZoneIdAsStringCodec}.
+     * <li>a {@link LocalDateTimeAsDocumentCodec};
+     * <li>a {@link ZoneOffsetAsInt32Codec};
+     * <li>a {@link ZoneIdAsStringCodec}.
      * </ul>
      */
     public ZonedDateTimeAsDocumentCodec() {
@@ -100,9 +101,15 @@ public final class ZonedDateTimeAsDocumentCodec
             Codec<ZoneOffset> zoneOffsetCodec,
             Codec<ZoneId> zoneIdCodec) {
 
-        this.localDateTimeCodec = requireNonNull(localDateTimeCodec);
-        this.zoneOffsetCodec = requireNonNull(zoneOffsetCodec);
-        this.zoneIdCodec = requireNonNull(zoneIdCodec);
+        this.localDateTimeCodec = requireNonNull(
+                localDateTimeCodec, "localDateTimeCodec is null"
+        );
+        this.zoneOffsetCodec = requireNonNull(
+                zoneOffsetCodec, "zoneOffsetCodec is null"
+        );
+        this.zoneIdCodec = requireNonNull(
+                zoneIdCodec, "zoneIdCodec is null"
+        );
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("dateTime", localDateTimeCodec::decode);
@@ -117,15 +124,22 @@ public final class ZonedDateTimeAsDocumentCodec
             ZonedDateTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
+
         writer.writeStartDocument();
+
         writer.writeName("dateTime");
         localDateTimeCodec.encode(
                 writer, value.toLocalDateTime(), encoderContext
         );
+
         writer.writeName("offset");
         zoneOffsetCodec.encode(writer, value.getOffset(), encoderContext);
+
         writer.writeName("zone");
         zoneIdCodec.encode(writer, value.getZone(), encoderContext);
+
         writer.writeEndDocument();
     }
 
@@ -134,6 +148,7 @@ public final class ZonedDateTimeAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> ofStrict(

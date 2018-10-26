@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.transl
 import static java.time.Instant.ofEpochMilli;
 import static java.time.LocalDate.ofEpochDay;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalTime;
 
@@ -44,8 +45,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalTimeAsDateTimeCodec
-        implements Codec<LocalTime> {
+public final class LocalTimeAsDateTimeCodec implements Codec<LocalTime> {
 
     @Override
     public void encode(
@@ -53,6 +53,8 @@ public final class LocalTimeAsDateTimeCodec
             LocalTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDateTime(
@@ -68,6 +70,7 @@ public final class LocalTimeAsDateTimeCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readDateTime,
                 val -> ofEpochMilli(val)

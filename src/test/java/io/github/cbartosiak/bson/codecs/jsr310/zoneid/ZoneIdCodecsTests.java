@@ -18,20 +18,25 @@ package io.github.cbartosiak.bson.codecs.jsr310.zoneid;
 
 import static java.time.ZoneId.getAvailableZoneIds;
 import static java.time.ZoneId.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.ZoneId;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class ZoneIdCodecsTests
-        extends AbstractCodecsTests {
+final class ZoneIdCodecsTests extends AbstractCodecsTests {
 
     private ZoneIdCodecsTests() {}
 
     private static void testZoneIdCodec(Codec<ZoneId> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, of("Etc/GMT+12"));
         testCodec(codec, of("Etc/GMT-14"));
         testCodec(codec, of("UTC"));

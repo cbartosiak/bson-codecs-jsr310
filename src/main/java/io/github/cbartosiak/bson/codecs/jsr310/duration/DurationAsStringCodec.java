@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.duration;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Duration;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Duration} values to and from
- * {@code BSON String}, such as
- * {@code PT10.100S}.
+ * {@code BSON String}, such as {@code PT10.100S}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
  * (see {@link Duration#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class DurationAsStringCodec
-        implements Codec<Duration> {
+public final class DurationAsStringCodec implements Codec<Duration> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class DurationAsStringCodec
             Duration value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.toString());
     }
 
@@ -54,6 +55,7 @@ public final class DurationAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 Duration::parse

@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.zoneoffset;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.ZoneOffset;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code ZoneOffset} values to and from
- * {@code BSON String}, such as
- * {@code +01:00}.
+ * {@code BSON String}, such as {@code +01:00}.
  * <p>
  * The values are stored as normalized IDs
  * (see {@link ZoneOffset#getId()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class ZoneOffsetAsStringCodec
-        implements Codec<ZoneOffset> {
+public final class ZoneOffsetAsStringCodec implements Codec<ZoneOffset> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class ZoneOffsetAsStringCodec
             ZoneOffset value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.getId());
     }
 
@@ -54,6 +55,7 @@ public final class ZoneOffsetAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 ZoneOffset::of

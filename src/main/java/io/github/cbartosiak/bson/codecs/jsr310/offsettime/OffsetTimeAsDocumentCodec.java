@@ -29,14 +29,15 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
-import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+
+import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 
 /**
  * <p>
@@ -58,8 +59,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class OffsetTimeAsDocumentCodec
-        implements Codec<OffsetTime> {
+public final class OffsetTimeAsDocumentCodec implements Codec<OffsetTime> {
 
     private final Codec<LocalTime>  localTimeCodec;
     private final Codec<ZoneOffset> zoneOffsetCodec;
@@ -69,8 +69,8 @@ public final class OffsetTimeAsDocumentCodec
     /**
      * Creates an {@code OffsetTimeAsDocumentCodec} using:
      * <ul>
-     * <li>a {@code LocalTimeAsDocumentCodec};
-     * <li>a {@code ZoneOffsetAsInt32Codec}.
+     * <li>a {@link LocalTimeAsDocumentCodec};
+     * <li>a {@link ZoneOffsetAsInt32Codec}.
      * </ul>
      */
     public OffsetTimeAsDocumentCodec() {
@@ -91,8 +91,12 @@ public final class OffsetTimeAsDocumentCodec
             Codec<LocalTime> localTimeCodec,
             Codec<ZoneOffset> zoneOffsetCodec) {
 
-        this.localTimeCodec = requireNonNull(localTimeCodec);
-        this.zoneOffsetCodec = requireNonNull(zoneOffsetCodec);
+        this.localTimeCodec = requireNonNull(
+                localTimeCodec, "localTimeCodec is null"
+        );
+        this.zoneOffsetCodec = requireNonNull(
+                zoneOffsetCodec, "zoneOffsetCodec is null"
+        );
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("time", localTimeCodec::decode);
@@ -106,11 +110,17 @@ public final class OffsetTimeAsDocumentCodec
             OffsetTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
+
         writer.writeStartDocument();
+
         writer.writeName("time");
         localTimeCodec.encode(writer, value.toLocalTime(), encoderContext);
+
         writer.writeName("offset");
         zoneOffsetCodec.encode(writer, value.getOffset(), encoderContext);
+
         writer.writeEndDocument();
     }
 
@@ -119,6 +129,7 @@ public final class OffsetTimeAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> of(

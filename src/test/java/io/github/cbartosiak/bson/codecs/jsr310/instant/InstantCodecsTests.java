@@ -25,15 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Instant;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.BsonInvalidOperationException;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class InstantCodecsTests
-        extends AbstractCodecsTests {
+final class InstantCodecsTests extends AbstractCodecsTests {
 
     private InstantCodecsTests() {}
 
@@ -41,6 +41,10 @@ final class InstantCodecsTests
             Codec<Instant> codec,
             boolean shouldThrow) {
 
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         if (shouldThrow) {
             assertThrows(
                     AssertionFailedError.class,

@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.localtime;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.LocalTime;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code LocalTime} values to and from
- * {@code BSON Int64}, such as
- * {@code 36930000000000}.
+ * {@code BSON Int64}, such as {@code 36_930_000_000_000}.
  * <p>
  * The values are stored as nanoseconds of a day
  * (see {@link LocalTime#toNanoOfDay()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class LocalTimeAsInt64Codec
-        implements Codec<LocalTime> {
+public final class LocalTimeAsInt64Codec implements Codec<LocalTime> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class LocalTimeAsInt64Codec
             LocalTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeInt64(value.toNanoOfDay());
     }
 
@@ -54,6 +55,7 @@ public final class LocalTimeAsInt64Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readInt64,
                 LocalTime::ofNanoOfDay

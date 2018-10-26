@@ -20,6 +20,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.transl
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
 import static java.time.Duration.ofSeconds;
+import static java.util.Objects.requireNonNull;
 import static org.bson.types.Decimal128.parse;
 
 import java.math.BigDecimal;
@@ -34,8 +35,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Duration} values to and from
- * {@code BSON Decimal128}, such as
- * {@code 10.100000000}.
+ * {@code BSON Decimal128}, such as {@code 10.100_000_000}.
  * <p>
  * The values are stored using the following format: {@code %d.%09d}
  * <ul>
@@ -45,8 +45,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class DurationAsDecimal128Codec
-        implements Codec<Duration> {
+public final class DurationAsDecimal128Codec implements Codec<Duration> {
 
     @Override
     public void encode(
@@ -54,6 +53,8 @@ public final class DurationAsDecimal128Codec
             Duration value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDecimal128(parse(format(
@@ -69,7 +70,7 @@ public final class DurationAsDecimal128Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        //noinspection OverlyLongLambda
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readDecimal128,
                 val -> {

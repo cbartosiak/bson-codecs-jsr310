@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.Duration.ofSeconds;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -36,8 +37,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Duration} values to and from
- * {@code BSON Document}, such as
- * {@code { seconds: 10, nanos: 100 }}.
+ * {@code BSON Document}, such as {@code { seconds: 10, nanos: 100 }}.
  * <p>
  * The values are stored using the following structure:
  * <ul>
@@ -47,8 +47,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class DurationAsDocumentCodec
-        implements Codec<Duration> {
+public final class DurationAsDocumentCodec implements Codec<Duration> {
 
     private static final Map<String, Decoder<?>> FIELD_DECODERS;
 
@@ -65,6 +64,8 @@ public final class DurationAsDocumentCodec
             Duration value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeStartDocument();
         writer.writeInt64("seconds", value.getSeconds());
         writer.writeInt32("nanos", value.getNano());
@@ -76,6 +77,7 @@ public final class DurationAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> ofSeconds(

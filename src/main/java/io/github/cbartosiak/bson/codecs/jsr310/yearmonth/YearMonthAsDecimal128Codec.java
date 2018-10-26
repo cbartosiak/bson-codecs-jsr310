@@ -20,6 +20,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.transl
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateEncodeExceptions;
 import static java.lang.String.format;
 import static java.time.YearMonth.of;
+import static java.util.Objects.requireNonNull;
 import static org.bson.types.Decimal128.parse;
 
 import java.math.BigDecimal;
@@ -34,8 +35,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code YearMonth} values to and from
- * {@code BSON Decimal128}, such as
- * {@code 2018.01}.
+ * {@code BSON Decimal128}, such as {@code 2018.01}.
  * <p>
  * The values are stored using the following format: {@code %d.%02d}
  * <ul>
@@ -45,8 +45,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class YearMonthAsDecimal128Codec
-        implements Codec<YearMonth> {
+public final class YearMonthAsDecimal128Codec implements Codec<YearMonth> {
 
     @Override
     public void encode(
@@ -54,6 +53,8 @@ public final class YearMonthAsDecimal128Codec
             YearMonth value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         translateEncodeExceptions(
                 () -> value,
                 val -> writer.writeDecimal128(parse(format(
@@ -69,7 +70,7 @@ public final class YearMonthAsDecimal128Codec
             BsonReader reader,
             DecoderContext decoderContext) {
 
-        //noinspection OverlyLongLambda
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readDecimal128,
                 val -> {

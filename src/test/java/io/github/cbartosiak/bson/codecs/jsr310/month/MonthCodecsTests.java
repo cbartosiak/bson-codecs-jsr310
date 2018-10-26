@@ -17,20 +17,25 @@
 package io.github.cbartosiak.bson.codecs.jsr310.month;
 
 import static java.time.Month.values;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Month;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class MonthCodecsTests
-        extends AbstractCodecsTests {
+final class MonthCodecsTests extends AbstractCodecsTests {
 
     private MonthCodecsTests() {}
 
     private static void testMonthCodec(Codec<Month> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         for (Month month : values()) {
             testCodec(codec, month);
         }

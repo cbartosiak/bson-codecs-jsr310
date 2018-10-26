@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.zoneid;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.ZoneId;
 
@@ -38,8 +39,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class ZoneIdAsStringCodec
-        implements Codec<ZoneId> {
+public final class ZoneIdAsStringCodec implements Codec<ZoneId> {
 
     @Override
     public void encode(
@@ -47,6 +47,8 @@ public final class ZoneIdAsStringCodec
             ZoneId value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.getId());
     }
 
@@ -55,6 +57,7 @@ public final class ZoneIdAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 ZoneId::of

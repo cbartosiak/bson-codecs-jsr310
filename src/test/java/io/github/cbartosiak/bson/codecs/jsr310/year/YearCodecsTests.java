@@ -20,20 +20,25 @@ import static java.time.Year.MAX_VALUE;
 import static java.time.Year.MIN_VALUE;
 import static java.time.Year.now;
 import static java.time.Year.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Year;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class YearCodecsTests
-        extends AbstractCodecsTests {
+final class YearCodecsTests extends AbstractCodecsTests {
 
     private YearCodecsTests() {}
 
     private static void testYearCodec(Codec<Year> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, of(MIN_VALUE));
         testCodec(codec, of(MAX_VALUE));
         testCodec(codec, now());
