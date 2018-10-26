@@ -20,20 +20,25 @@ import static java.lang.Long.MAX_VALUE;
 import static java.time.Duration.ZERO;
 import static java.time.Duration.ofHours;
 import static java.time.Duration.ofSeconds;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Duration;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class DurationCodecsTests
-        extends AbstractCodecsTests {
+final class DurationCodecsTests extends AbstractCodecsTests {
 
     private DurationCodecsTests() {}
 
     private static void testDurationCodec(Codec<Duration> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, ZERO);
         testCodec(codec, ofSeconds(MAX_VALUE, 999_999_999L));
         testCodec(codec, ofHours(12));

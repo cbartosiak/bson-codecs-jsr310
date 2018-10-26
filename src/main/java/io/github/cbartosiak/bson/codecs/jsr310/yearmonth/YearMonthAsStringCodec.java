@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.yearmonth;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.YearMonth;
 
@@ -29,8 +30,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code YearMonth} values to and from
- * {@code BSON String}, such as
- * {@code 2018-01}.
+ * {@code BSON String}, such as {@code 2018-01}.
  * <p>
  * The values are stored as <i>quasi</i> {@code ISO-8601} formatted strings
  * (see {@link YearMonth}). Note that the years greater than
@@ -38,8 +38,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class YearMonthAsStringCodec
-        implements Codec<YearMonth> {
+public final class YearMonthAsStringCodec implements Codec<YearMonth> {
 
     @Override
     public void encode(
@@ -47,7 +46,8 @@ public final class YearMonthAsStringCodec
             YearMonth value,
             EncoderContext encoderContext) {
 
-        //noinspection MagicNumber
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString((value.getYear() > 9999 ? "+" : "") + value);
     }
 
@@ -56,6 +56,7 @@ public final class YearMonthAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 YearMonth::parse

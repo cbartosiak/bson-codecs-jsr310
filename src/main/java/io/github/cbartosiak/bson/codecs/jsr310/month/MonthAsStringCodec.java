@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.month;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Month;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Month} values to and from
- * {@code BSON String}, such as
- * {@code JANUARY}.
+ * {@code BSON String}, such as {@code JANUARY}.
  * <p>
  * The values are stored as enum constant names
  * (see {@link Month#name()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class MonthAsStringCodec
-        implements Codec<Month> {
+public final class MonthAsStringCodec implements Codec<Month> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class MonthAsStringCodec
             Month value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.name());
     }
 
@@ -54,6 +55,7 @@ public final class MonthAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 Month::valueOf

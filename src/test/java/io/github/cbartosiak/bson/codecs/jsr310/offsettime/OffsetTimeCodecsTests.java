@@ -19,23 +19,28 @@ package io.github.cbartosiak.bson.codecs.jsr310.offsettime;
 import static java.time.OffsetTime.MAX;
 import static java.time.OffsetTime.MIN;
 import static java.time.OffsetTime.now;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.OffsetTime;
+
+import org.bson.codecs.Codec;
+import org.junit.jupiter.api.Test;
 
 import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsStringCodec;
-import org.bson.codecs.Codec;
-import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class OffsetTimeCodecsTests
-        extends AbstractCodecsTests {
+final class OffsetTimeCodecsTests extends AbstractCodecsTests {
 
     private OffsetTimeCodecsTests() {}
 
     private static void testOffsetTimeCodec(Codec<OffsetTime> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, MIN);
         testCodec(codec, MAX);
         testCodec(codec, now());
@@ -49,21 +54,23 @@ final class OffsetTimeCodecsTests
     @Test
     void testOffsetTimeAsDocumentCodec() {
         testOffsetTimeCodec(new OffsetTimeAsDocumentCodec());
-    }
-
-    @Test
-    void testOffsetTimeAsDocumentCodecV1() {
+        assertThrows(
+                NullPointerException.class,
+                () -> new OffsetTimeAsDocumentCodec(
+                        null, new ZoneOffsetAsStringCodec()
+                )
+        );
+        assertThrows(
+                NullPointerException.class,
+                () -> new OffsetTimeAsDocumentCodec(
+                        new LocalTimeAsDocumentCodec(), null
+                )
+        );
         testOffsetTimeCodec(new OffsetTimeAsDocumentCodec(
-                new LocalTimeAsDocumentCodec(),
-                new ZoneOffsetAsStringCodec()
+                new LocalTimeAsDocumentCodec(), new ZoneOffsetAsStringCodec()
         ));
-    }
-
-    @Test
-    void testOffsetTimeAsDocumentCodecV2() {
         testOffsetTimeCodec(new OffsetTimeAsDocumentCodec(
-                new LocalTimeAsDocumentCodec(),
-                new ZoneOffsetAsInt32Codec()
+                new LocalTimeAsDocumentCodec(), new ZoneOffsetAsInt32Codec()
         ));
     }
 }

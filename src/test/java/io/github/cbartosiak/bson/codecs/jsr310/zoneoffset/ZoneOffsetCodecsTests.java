@@ -19,20 +19,25 @@ package io.github.cbartosiak.bson.codecs.jsr310.zoneoffset;
 import static java.time.ZoneOffset.MAX;
 import static java.time.ZoneOffset.MIN;
 import static java.time.ZoneOffset.UTC;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.ZoneOffset;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class ZoneOffsetCodecsTests
-        extends AbstractCodecsTests {
+final class ZoneOffsetCodecsTests extends AbstractCodecsTests {
 
     private ZoneOffsetCodecsTests() {}
 
     private static void testZoneOffsetCodec(Codec<ZoneOffset> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, MIN);
         testCodec(codec, MAX);
         testCodec(codec, UTC);

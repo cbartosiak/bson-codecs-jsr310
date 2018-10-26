@@ -17,20 +17,25 @@
 package io.github.cbartosiak.bson.codecs.jsr310.dayofweek;
 
 import static java.time.DayOfWeek.values;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.DayOfWeek;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class DayOfWeekCodecsTests
-        extends AbstractCodecsTests {
+final class DayOfWeekCodecsTests extends AbstractCodecsTests {
 
     private DayOfWeekCodecsTests() {}
 
     private static void testDayOfWeekCodec(Codec<DayOfWeek> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         for (DayOfWeek dayOfWeek : values()) {
             testCodec(codec, dayOfWeek);
         }

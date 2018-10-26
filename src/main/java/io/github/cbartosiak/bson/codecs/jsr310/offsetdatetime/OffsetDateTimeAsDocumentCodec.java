@@ -29,14 +29,15 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
-import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+
+import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 
 /**
  * <p>
@@ -69,8 +70,8 @@ public final class OffsetDateTimeAsDocumentCodec
     /**
      * Creates an {@code OffsetDateTimeAsDocumentCodec} using:
      * <ul>
-     * <li>a {@code LocalDateTimeAsDocumentCodec};
-     * <li>a {@code ZoneOffsetAsInt32Codec}.
+     * <li>a {@link LocalDateTimeAsDocumentCodec};
+     * <li>a {@link ZoneOffsetAsInt32Codec}.
      * </ul>
      */
     public OffsetDateTimeAsDocumentCodec() {
@@ -91,8 +92,12 @@ public final class OffsetDateTimeAsDocumentCodec
             Codec<LocalDateTime> localDateTimeCodec,
             Codec<ZoneOffset> zoneOffsetCodec) {
 
-        this.localDateTimeCodec = requireNonNull(localDateTimeCodec);
-        this.zoneOffsetCodec = requireNonNull(zoneOffsetCodec);
+        this.localDateTimeCodec = requireNonNull(
+                localDateTimeCodec, "localDateTimeCodec is null"
+        );
+        this.zoneOffsetCodec = requireNonNull(
+                zoneOffsetCodec, "zoneOffsetCodec is null"
+        );
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("dateTime", localDateTimeCodec::decode);
@@ -106,13 +111,19 @@ public final class OffsetDateTimeAsDocumentCodec
             OffsetDateTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
+
         writer.writeStartDocument();
+
         writer.writeName("dateTime");
         localDateTimeCodec.encode(
                 writer, value.toLocalDateTime(), encoderContext
         );
+
         writer.writeName("offset");
         zoneOffsetCodec.encode(writer, value.getOffset(), encoderContext);
+
         writer.writeEndDocument();
     }
 
@@ -121,6 +132,7 @@ public final class OffsetDateTimeAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> of(

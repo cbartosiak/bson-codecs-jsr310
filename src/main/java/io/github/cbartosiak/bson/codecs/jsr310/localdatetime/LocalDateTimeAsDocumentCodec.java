@@ -29,14 +29,15 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDocumentCodec;
-import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+
+import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDocumentCodec;
+import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
 
 /**
  * <p>
@@ -69,8 +70,8 @@ public final class LocalDateTimeAsDocumentCodec
     /**
      * Creates a {@code LocalDateTimeAsDocumentCodec} using:
      * <ul>
-     * <li>a {@code LocalDateAsDocumentCodec};
-     * <li>a {@code LocalTimeAsDocumentCodec}.
+     * <li>a {@link LocalDateAsDocumentCodec};
+     * <li>a {@link LocalTimeAsDocumentCodec}.
      * </ul>
      */
     public LocalDateTimeAsDocumentCodec() {
@@ -91,8 +92,12 @@ public final class LocalDateTimeAsDocumentCodec
             Codec<LocalDate> localDateCodec,
             Codec<LocalTime> localTimeCodec) {
 
-        this.localDateCodec = requireNonNull(localDateCodec);
-        this.localTimeCodec = requireNonNull(localTimeCodec);
+        this.localDateCodec = requireNonNull(
+                localDateCodec, "localDateCodec is null"
+        );
+        this.localTimeCodec = requireNonNull(
+                localTimeCodec, "localTimeCodec is null"
+        );
 
         Map<String, Decoder<?>> fd = new HashMap<>();
         fd.put("date", localDateCodec::decode);
@@ -106,11 +111,17 @@ public final class LocalDateTimeAsDocumentCodec
             LocalDateTime value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
+
         writer.writeStartDocument();
+
         writer.writeName("date");
         localDateCodec.encode(writer, value.toLocalDate(), encoderContext);
+
         writer.writeName("time");
         localTimeCodec.encode(writer, value.toLocalTime(), encoderContext);
+
         writer.writeEndDocument();
     }
 
@@ -119,6 +130,7 @@ public final class LocalDateTimeAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, fieldDecoders),
                 val -> of(

@@ -25,6 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
 
+import org.bson.BsonInvalidOperationException;
+import org.bson.codecs.Codec;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+
 import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDateTimeCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.localdate.LocalDateAsDocumentCodec;
@@ -33,14 +38,9 @@ import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDateTimeCode
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsDocumentCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsInt64Codec;
 import io.github.cbartosiak.bson.codecs.jsr310.localtime.LocalTimeAsStringCodec;
-import org.bson.BsonInvalidOperationException;
-import org.bson.codecs.Codec;
-import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
 
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class LocalDateTimeCodecsTests
-        extends AbstractCodecsTests {
+final class LocalDateTimeCodecsTests extends AbstractCodecsTests {
 
     private LocalDateTimeCodecsTests() {}
 
@@ -49,6 +49,10 @@ final class LocalDateTimeCodecsTests
             boolean shouldThrowForDate,
             boolean shouldThrowForTime) {
 
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         if (shouldThrowForDate) {
             assertThrows(
                     BsonInvalidOperationException.class,
@@ -99,98 +103,62 @@ final class LocalDateTimeCodecsTests
                 new LocalDateTimeAsDocumentCodec(),
                 false, false
         );
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV1() {
+        assertThrows(
+                NullPointerException.class,
+                () -> new LocalDateTimeAsDocumentCodec(
+                        null, new LocalTimeAsStringCodec()
+                )
+        );
+        assertThrows(
+                NullPointerException.class,
+                () -> new LocalDateTimeAsDocumentCodec(
+                        new LocalDateAsStringCodec(), null
+                )
+        );
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsStringCodec(),
                 new LocalTimeAsStringCodec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV2() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsStringCodec(),
                 new LocalTimeAsDocumentCodec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV3() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsStringCodec(),
                 new LocalTimeAsDateTimeCodec()
         ), false, true);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV4() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsStringCodec(),
                 new LocalTimeAsInt64Codec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV5() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDocumentCodec(),
                 new LocalTimeAsStringCodec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV6() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDocumentCodec(),
                 new LocalTimeAsDocumentCodec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV7() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDocumentCodec(),
                 new LocalTimeAsDateTimeCodec()
         ), false, true);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV8() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDocumentCodec(),
                 new LocalTimeAsInt64Codec()
         ), false, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV9() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDateTimeCodec(),
                 new LocalTimeAsStringCodec()
         ), true, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV10() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDateTimeCodec(),
                 new LocalTimeAsDocumentCodec()
         ), true, false);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV11() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDateTimeCodec(),
                 new LocalTimeAsDateTimeCodec()
         ), true, true);
-    }
-
-    @Test
-    void testLocalDateTimeAsDocumentCodecV12() {
         testLocalDateTimeCodec(new LocalDateTimeAsDocumentCodec(
                 new LocalDateAsDateTimeCodec(),
                 new LocalTimeAsInt64Codec()

@@ -26,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalTime;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class LocalTimeCodecsTests
-        extends AbstractCodecsTests {
+final class LocalTimeCodecsTests extends AbstractCodecsTests {
 
     private LocalTimeCodecsTests() {}
 
@@ -41,17 +41,21 @@ final class LocalTimeCodecsTests
             Codec<LocalTime> codec,
             boolean shouldThrow) {
 
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         if (shouldThrow) {
             assertThrows(
                     AssertionFailedError.class,
-                    () -> testCodec(codec, ofNanoOfDay(10000000100L))
+                    () -> testCodec(codec, ofNanoOfDay(10_000_000_100L))
             );
         }
         else {
-            testCodec(codec, ofNanoOfDay(10000000100L));
+            testCodec(codec, ofNanoOfDay(10_000_000_100L));
         }
         testCodec(codec, MIN);
-        testCodec(codec, MAX.minusNanos(999999));
+        testCodec(codec, MAX.minusNanos(999_999));
         testCodec(codec, MIDNIGHT);
         testCodec(codec, NOON);
         testCodec(codec, now());

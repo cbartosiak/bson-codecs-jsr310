@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.instant;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Instant;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Instant} values to and from
- * {@code BSON String}, such as
- * {@code 2018-01-02T10:15:30Z}.
+ * {@code BSON String}, such as {@code 2018-01-02T10:15:30Z}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
  * (see {@link Instant#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class InstantAsStringCodec
-        implements Codec<Instant> {
+public final class InstantAsStringCodec implements Codec<Instant> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class InstantAsStringCodec
             Instant value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.toString());
     }
 
@@ -54,6 +55,7 @@ public final class InstantAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 Instant::parse

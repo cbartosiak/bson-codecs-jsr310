@@ -18,26 +18,31 @@ package io.github.cbartosiak.bson.codecs.jsr310.zoneddatetime;
 
 import static java.time.ZonedDateTime.now;
 import static java.time.ZonedDateTime.of;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import org.bson.codecs.Codec;
+import org.junit.jupiter.api.Test;
 
 import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import io.github.cbartosiak.bson.codecs.jsr310.localdatetime.LocalDateTimeAsDocumentCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.zoneid.ZoneIdAsStringCodec;
 import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsInt32Codec;
 import io.github.cbartosiak.bson.codecs.jsr310.zoneoffset.ZoneOffsetAsStringCodec;
-import org.bson.codecs.Codec;
-import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class ZonedDateTimeCodecsTests
-        extends AbstractCodecsTests {
+final class ZonedDateTimeCodecsTests extends AbstractCodecsTests {
 
     private ZonedDateTimeCodecsTests() {}
 
     private static void testZonedDateTimeCodec(Codec<ZonedDateTime> codec) {
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         testCodec(codec, of(
                 Year.MIN_VALUE, 1, 1, 0, 0, 0, 0, ZoneId.of("Etc/GMT+12")
         ));
@@ -56,19 +61,35 @@ final class ZonedDateTimeCodecsTests
     @Test
     void testZonedDateTimeAsDocumentCodec() {
         testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec());
-    }
-
-    @Test
-    void testZonedDateTimeAsDocumentCodecV1() {
+        assertThrows(
+                NullPointerException.class,
+                () -> new ZonedDateTimeAsDocumentCodec(
+                        null,
+                        new ZoneOffsetAsStringCodec(),
+                        new ZoneIdAsStringCodec()
+                )
+        );
+        assertThrows(
+                NullPointerException.class,
+                () -> new ZonedDateTimeAsDocumentCodec(
+                        new LocalDateTimeAsDocumentCodec(),
+                        null,
+                        new ZoneIdAsStringCodec()
+                )
+        );
+        assertThrows(
+                NullPointerException.class,
+                () -> new ZonedDateTimeAsDocumentCodec(
+                        new LocalDateTimeAsDocumentCodec(),
+                        new ZoneOffsetAsStringCodec(),
+                        null
+                )
+        );
         testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec(
                 new LocalDateTimeAsDocumentCodec(),
                 new ZoneOffsetAsStringCodec(),
                 new ZoneIdAsStringCodec()
         ));
-    }
-
-    @Test
-    void testZonedDateTimeAsDocumentCodecV2() {
         testZonedDateTimeCodec(new ZonedDateTimeAsDocumentCodec(
                 new LocalDateTimeAsDocumentCodec(),
                 new ZoneOffsetAsInt32Codec(),

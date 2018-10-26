@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 
-import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
 import org.bson.BsonInvalidOperationException;
 import org.bson.codecs.Codec;
 import org.junit.jupiter.api.Test;
 
+import io.github.cbartosiak.bson.codecs.jsr310.internal.AbstractCodecsTests;
+
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
-final class LocalDateCodecsTests
-        extends AbstractCodecsTests {
+final class LocalDateCodecsTests extends AbstractCodecsTests {
 
     private LocalDateCodecsTests() {}
 
@@ -38,6 +38,10 @@ final class LocalDateCodecsTests
             Codec<LocalDate> codec,
             boolean shouldThrow) {
 
+        assertThrows(
+                NullPointerException.class,
+                () -> testCodec(codec, null)
+        );
         if (shouldThrow) {
             assertThrows(
                     BsonInvalidOperationException.class,

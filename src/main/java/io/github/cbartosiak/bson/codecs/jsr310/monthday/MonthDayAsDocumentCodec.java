@@ -21,6 +21,7 @@ import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.readDo
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
 import static java.time.MonthDay.of;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 
 import java.time.MonthDay;
 import java.util.HashMap;
@@ -36,8 +37,7 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code MonthDay} values to and from
- * {@code BSON Document}, such as
- * {@code { month: 1, day: 2 }}.
+ * {@code BSON Document}, such as {@code { month: 1, day: 2 }}.
  * <p>
  * The values are stored using the following structure:
  * <ul>
@@ -47,8 +47,7 @@ import org.bson.codecs.EncoderContext;
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class MonthDayAsDocumentCodec
-        implements Codec<MonthDay> {
+public final class MonthDayAsDocumentCodec implements Codec<MonthDay> {
 
     private static final Map<String, Decoder<?>> FIELD_DECODERS;
 
@@ -65,6 +64,8 @@ public final class MonthDayAsDocumentCodec
             MonthDay value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeStartDocument();
         writer.writeInt32("month", value.getMonthValue());
         writer.writeInt32("day", value.getDayOfMonth());
@@ -76,6 +77,7 @@ public final class MonthDayAsDocumentCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 () -> readDocument(reader, decoderContext, FIELD_DECODERS),
                 val -> of(

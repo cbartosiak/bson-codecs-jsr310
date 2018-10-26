@@ -17,6 +17,7 @@
 package io.github.cbartosiak.bson.codecs.jsr310.period;
 
 import static io.github.cbartosiak.bson.codecs.jsr310.internal.CodecsUtil.translateDecodeExceptions;
+import static java.util.Objects.requireNonNull;
 
 import java.time.Period;
 
@@ -29,16 +30,14 @@ import org.bson.codecs.EncoderContext;
 /**
  * <p>
  * Encodes and decodes {@code Period} values to and from
- * {@code BSON String}, such as
- * {@code P18Y1M2D}.
+ * {@code BSON String}, such as {@code P18Y1M2D}.
  * <p>
  * The values are stored as {@code ISO-8601} formatted strings
  * (see {@link Period#toString()}).
  * <p>
  * This type is <b>immutable</b>.
  */
-public final class PeriodAsStringCodec
-        implements Codec<Period> {
+public final class PeriodAsStringCodec implements Codec<Period> {
 
     @Override
     public void encode(
@@ -46,6 +45,8 @@ public final class PeriodAsStringCodec
             Period value,
             EncoderContext encoderContext) {
 
+        requireNonNull(writer, "writer is null");
+        requireNonNull(value, "value is null");
         writer.writeString(value.toString());
     }
 
@@ -54,6 +55,7 @@ public final class PeriodAsStringCodec
             BsonReader reader,
             DecoderContext decoderContext) {
 
+        requireNonNull(reader, "reader is null");
         return translateDecodeExceptions(
                 reader::readString,
                 Period::parse

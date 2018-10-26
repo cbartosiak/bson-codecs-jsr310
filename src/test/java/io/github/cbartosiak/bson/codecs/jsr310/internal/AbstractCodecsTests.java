@@ -53,7 +53,6 @@ public abstract class AbstractCodecsTests {
             codec.encode(writer, value, EncoderContext.builder().build());
 
             writer.writeEndDocument();
-            writer.close();
         }
     }
 
