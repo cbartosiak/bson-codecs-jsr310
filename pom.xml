@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.3.0</version>
+    <version>3.4.0</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -68,7 +68,7 @@
     <properties>
 
         <!-- BSON -->
-        <bson.version>3.8.2</bson.version>
+        <bson.version>3.9.0</bson.version>
 
         <!-- JUnit -->
         <junit-jupiter.version>5.3.1</junit-jupiter.version>
