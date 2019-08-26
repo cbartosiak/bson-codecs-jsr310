@@ -68,7 +68,7 @@
     <properties>
 
         <!-- BSON -->
-        <bson.version>3.9.0</bson.version>
+        <bson.version>3.11.0</bson.version>
 
         <!-- JUnit -->
         <junit-jupiter.version>5.3.1</junit-jupiter.version>
