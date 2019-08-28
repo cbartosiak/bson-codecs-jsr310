@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.4.0</version>
+    <version>3.5.0</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -68,10 +68,10 @@
     <properties>
 
         <!-- BSON -->
-        <bson.version>3.9.0</bson.version>
+        <bson.version>3.11.0</bson.version>
 
         <!-- JUnit -->
-        <junit-jupiter.version>5.3.1</junit-jupiter.version>
+        <junit-jupiter.version>5.5.1</junit-jupiter.version>
 
         <!-- Maven Compiler Plugin -->
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -92,7 +92,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
         <!-- Maven Javadoc Plugin -->
-        <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
 
         <!-- Maven Resources Plugin -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -101,7 +101,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 
         <!-- Maven Surefire Plugin -->
-        <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 
         <!-- Nexus Staging Maven Plugin -->
         <nexus-staging-maven-plugin.version>
@@ -233,7 +233,7 @@
                                     https://docs.oracle.com/javase/8/docs/api
                                 </link>
                                 <link>
-                                    http://mongodb.github.io/mongo-java-driver/3.8/javadoc
+                                    http://mongodb.github.io/mongo-java-driver/3.11/javadoc
                                 </link>
                             </links>
                         </configuration>
