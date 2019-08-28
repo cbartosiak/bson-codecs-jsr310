@@ -19,7 +19,6 @@ package io.github.cbartosiak.bson.codecs.jsr310.instant;
 import static java.time.Instant.EPOCH;
 import static java.time.Instant.MAX;
 import static java.time.Instant.MIN;
-import static java.time.Instant.now;
 import static java.time.Instant.ofEpochSecond;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -39,7 +38,8 @@ final class InstantCodecsTests extends AbstractCodecsTests {
 
     private static void testInstantCodec(
             Codec<Instant> codec,
-            boolean shouldThrow) {
+            boolean shouldThrow,
+            boolean nanosLost) {
 
         assertThrows(
                 NullPointerException.class,
@@ -65,21 +65,29 @@ final class InstantCodecsTests extends AbstractCodecsTests {
             testCodec(codec, MAX);
         }
         testCodec(codec, EPOCH);
-        testCodec(codec, now());
+        testCodec(codec, now(nanosLost));
+    }
+
+    private static Instant now(boolean nanosLost) {
+        Instant now = Instant.now();
+        if (nanosLost) {
+            now = now.minusNanos(now.getNano());
+        }
+        return now;
     }
 
     @Test
     void testInstantAsStringCodec() {
-        testInstantCodec(new InstantAsStringCodec(), false);
+        testInstantCodec(new InstantAsStringCodec(), false, false);
     }
 
     @Test
     void testInstantAsDocumentCodec() {
-        testInstantCodec(new InstantAsDocumentCodec(), false);
+        testInstantCodec(new InstantAsDocumentCodec(), false, false);
     }
 
     @Test
     void testInstantAsDateTimeCodec() {
-        testInstantCodec(new InstantAsDateTimeCodec(), true);
+        testInstantCodec(new InstantAsDateTimeCodec(), true, true);
     }
 }

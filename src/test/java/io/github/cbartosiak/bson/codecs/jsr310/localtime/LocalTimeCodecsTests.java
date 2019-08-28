@@ -20,7 +20,6 @@ import static java.time.LocalTime.MAX;
 import static java.time.LocalTime.MIDNIGHT;
 import static java.time.LocalTime.MIN;
 import static java.time.LocalTime.NOON;
-import static java.time.LocalTime.now;
 import static java.time.LocalTime.ofNanoOfDay;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -39,7 +38,8 @@ final class LocalTimeCodecsTests extends AbstractCodecsTests {
 
     private static void testLocalTimeCodec(
             Codec<LocalTime> codec,
-            boolean shouldThrow) {
+            boolean shouldThrow,
+            boolean nanosLost) {
 
         assertThrows(
                 NullPointerException.class,
@@ -58,26 +58,34 @@ final class LocalTimeCodecsTests extends AbstractCodecsTests {
         testCodec(codec, MAX.minusNanos(999_999));
         testCodec(codec, MIDNIGHT);
         testCodec(codec, NOON);
-        testCodec(codec, now());
+        testCodec(codec, now(nanosLost));
+    }
+
+    private static LocalTime now(boolean nanosLost) {
+        LocalTime now = LocalTime.now();
+        if (nanosLost) {
+            now = now.minusNanos(now.getNano());
+        }
+        return now;
     }
 
     @Test
     void testLocalTimeAsStringCodec() {
-        testLocalTimeCodec(new LocalTimeAsStringCodec(), false);
+        testLocalTimeCodec(new LocalTimeAsStringCodec(), false, false);
     }
 
     @Test
     void testLocalTimeAsDocumentCodec() {
-        testLocalTimeCodec(new LocalTimeAsDocumentCodec(), false);
+        testLocalTimeCodec(new LocalTimeAsDocumentCodec(), false, false);
     }
 
     @Test
     void testLocalTimeAsDateTimeCodec() {
-        testLocalTimeCodec(new LocalTimeAsDateTimeCodec(), true);
+        testLocalTimeCodec(new LocalTimeAsDateTimeCodec(), true, true);
     }
 
     @Test
     void testLocalTimeAsInt64Codec() {
-        testLocalTimeCodec(new LocalTimeAsInt64Codec(), false);
+        testLocalTimeCodec(new LocalTimeAsInt64Codec(), false, false);
     }
 }
