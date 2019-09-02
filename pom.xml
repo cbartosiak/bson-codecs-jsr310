@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.5.3</version>
+    <version>3.5.4</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -225,16 +225,15 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
-                            <source>1.8</source>
                             <additionalOptions>
                                 -Xdoclint:none
                             </additionalOptions>
                             <links>
                                 <link>
-                                    https://docs.oracle.com/javase/8/docs/api
+                                    https://docs.oracle.com/en/java/javase/11/docs/api/
                                 </link>
                                 <link>
-                                    https://mongodb.github.io/mongo-java-driver/3.10/javadoc
+                                    https://mongodb.github.io/mongo-java-driver/3.11/javadoc/
                                 </link>
                             </links>
                         </configuration>
