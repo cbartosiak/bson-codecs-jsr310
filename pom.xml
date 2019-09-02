@@ -8,7 +8,7 @@
     <!-- Coordinates -->
     <groupId>io.github.cbartosiak</groupId>
     <artifactId>bson-codecs-jsr310</artifactId>
-    <version>3.5.2</version>
+    <version>3.5.3</version>
 
     <!-- Metadata -->
     <name>BSON codecs JSR-310</name>
@@ -225,6 +225,7 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
+                            <source>1.8</source>
                             <additionalOptions>
                                 -Xdoclint:none
                             </additionalOptions>
